@@ -1,0 +1,664 @@
+
+
+<!-- فونت آوسام -->
+
+<style>
+        /* =========================================<br />
+           پایه و متغیرهای رنگی<br />
+           ========================================= */<br />
+        :root {<br />
+            --primary: #0f766e;<br />
+            --primary-hover: #0d6e64;<br />
+            --primary-glow: rgba(15, 118, 110, 0.5);</p>
+<p>            --bg-body: #f8fafc;<br />
+            --bg-surface: rgba(255, 255, 255, 0.7);<br />
+            --bg-surface-solid: #ffffff;<br />
+            --bg-border: rgba(15, 118, 110, 0.15);<br />
+            --text-main: #0f172a;<br />
+            --text-muted: #64748b;<br />
+            --card-glass: rgba(255, 255, 255, 0.6);</p>
+<p>            --current-font: 'Vazirmatn', Tahoma, sans-serif;<br />
+        }</p>
+<p>        body.dark-mode {<br />
+            --primary: #2dd4bf;<br />
+            --primary-hover: #5eead4;<br />
+            --primary-glow: rgba(45, 212, 191, 0.4);</p>
+<p>            --bg-body: #020617;<br />
+            --bg-surface: rgba(15, 23, 42, 0.7);<br />
+            --bg-surface-solid: #0f172a;<br />
+            --bg-border: rgba(255, 255, 255, 0.08);<br />
+            --text-main: #f8fafc;<br />
+            --text-muted: #94a3b8;<br />
+            --card-glass: rgba(30, 41, 59, 0.5);<br />
+        }</p>
+<p>        @font-face {<br />
+            font-family: 'Vazirmatn';<br />
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-Regular.woff2') format('woff2');<br />
+            font-weight: 400; font-display: swap;<br />
+        }<br />
+        @font-face {<br />
+            font-family: 'Vazirmatn';<br />
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-Bold.woff2') format('woff2');<br />
+            font-weight: 700; font-display: swap;<br />
+        }<br />
+        @font-face {<br />
+            font-family: 'Vazirmatn';<br />
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-Black.woff2') format('woff2');<br />
+            font-weight: 900; font-display: swap;<br />
+        }</p>
+<p>        * { box-sizing: border-box; margin: 0; padding: 0; }</p>
+<p>        body {<br />
+            font-family: var(--current-font);<br />
+            background-color: var(--bg-body);<br />
+            color: var(--text-main);<br />
+            overflow-x: hidden;<br />
+            transition: background-color 0.4s ease, color 0.4s ease;<br />
+            -webkit-font-smoothing: antialiased;<br />
+        }</p>
+<p>        a { text-decoration: none; color: inherit; }<br />
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 10; }</p>
+<p>        /* =========================================<br />
+           افکت اورب‌های نوری محیط (Ambient Light)<br />
+           ========================================= */<br />
+        .ambient-light {<br />
+            position: fixed; border-radius: 50%; filter: blur(120px); z-index: 0;<br />
+            animation: moveOrb 20s infinite alternate; pointer-events: none; opacity: 0.6;<br />
+        }<br />
+        body.dark-mode .ambient-light { opacity: 0.25; }<br />
+        .orb-1 { width: 500px; height: 500px; background: var(--primary); top: -200px; left: -100px; }<br />
+        .orb-2 { width: 600px; height: 600px; background: #0ea5e9; bottom: -200px; right: -200px; animation-duration: 25s; animation-direction: alternate-reverse;}</p>
+<p>        @keyframes moveOrb {<br />
+            0% { transform: translate(0, 0) scale(1); }<br />
+            100% { transform: translate(150px, 150px) scale(1.2); }<br />
+        }</p>
+<p>        /* =========================================<br />
+           هدر هوشمند<br />
+           ========================================= */<br />
+        header {<br />
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 1200px;<br />
+            background: var(--bg-surface); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);<br />
+            border: 1px solid var(--bg-border); border-radius: 100px;<br />
+            display: flex; justify-content: space-between; align-items: center; padding: 12px 24px;<br />
+            z-index: 1000; transition: width 0.4s, padding 0.4s; box-shadow: 0 10px 30px rgba(0,0,0,0.05);<br />
+        }<br />
+        body.dark-mode header { box-shadow: 0 10px 30px rgba(0,0,0,0.4); }</p>
+<p>        .logo { font-size: 1.5rem; font-weight: 900; display: flex; align-items: center; gap: 8px; color: var(--primary); }</p>
+<p>        .nav-links { display: flex; gap: 30px; align-items: center; }<br />
+        .nav-links a { font-weight: 600; font-size: 0.95rem; transition: 0.2s; position: relative;}<br />
+        .nav-links a::after {<br />
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; right: 0;<br />
+            background: var(--primary); transition: width 0.3s ease; border-radius: 5px;<br />
+        }<br />
+        .nav-links a:hover::after { width: 100%; }</p>
+<p>        .header-actions { display: flex; align-items: center; gap: 12px; }<br />
+        .icon-btn {<br />
+            background: transparent; color: var(--text-main); width: 42px; height: 42px; border-radius: 50%;<br />
+            display: grid; place-items: center; cursor: pointer; transition: 0.3s; font-size: 1.1rem; border: none;<br />
+        }<br />
+        .icon-btn:hover { background: var(--bg-border); color: var(--primary); }</p>
+<p>        .btn-cta {<br />
+            background: var(--primary); color: white; padding: 12px 28px; border-radius: 50px; font-weight: 700;<br />
+            box-shadow: 0 5px 20px var(--primary-glow); transition: all 0.3s ease; white-space: nowrap; display: inline-flex; align-items:center; border:none; cursor: pointer; justify-content:center;<br />
+        }<br />
+        .btn-cta:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 30px var(--primary-glow); color: white;}<br />
+        .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--bg-border); box-shadow:none;}<br />
+        .btn-outline:hover { background: var(--bg-body); border-color: var(--primary); box-shadow: 0 10px 20px rgba(0,0,0,0.05); transform: translateY(-2px);}</p>
+<p>        .menu-toggle { display: none; background: transparent; border: none; font-size: 1.5rem; color: var(--text-main); cursor: pointer; }</p>
+<p>        @media (max-width: 900px) {<br />
+            header { top: 15px; width: 95%; padding: 12px 20px;}<br />
+            .nav-links {<br />
+                position: absolute; top: 120%; left: 0; right: 0; flex-direction: column;<br />
+                background: var(--bg-surface-solid); border: 1px solid var(--bg-border); border-radius: 20px;<br />
+                padding: 20px; gap: 20px; text-align: center;<br />
+                opacity: 0; pointer-events: none; transform: translateY(-20px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);<br />
+                box-shadow: 0 20px 40px rgba(0,0,0,0.1);<br />
+            }<br />
+            body.dark-mode .nav-links { box-shadow: 0 20px 40px rgba(0,0,0,0.5); }<br />
+            .nav-links.active { opacity: 1; pointer-events: auto; transform: translateY(0); }<br />
+            .menu-toggle { display: block; }<br />
+            .header-actions .btn-cta { display: none; }<br />
+        }</p>
+<p>        /* =========================================<br />
+           Hero: کپی شده با استایل چشم‌گیر فایل 24<br />
+           ========================================= */<br />
+        .hero {<br />
+            min-height: 100vh; display: flex; align-items: center; justify-content: space-between; gap: 40px;<br />
+            padding-top: 100px;<br />
+        }<br />
+        .hero-text { flex: 1.2; }</p>
+<p>        .hero h1 { font-size: clamp(2.5rem, 5.5vw, 4.8rem); line-height: 1.2; font-weight: 900; margin-bottom: 24px; letter-spacing: -1.5px;}</p>
+<p>        /* اعمال دیزاین جذاب File 24 برای تیترهای کلیدی */<br />
+        .stroke-text {<br />
+            -webkit-text-stroke: 2px var(--primary); color: transparent; display: block;<br />
+            text-shadow: 0 0 20px var(--primary-glow);<br />
+            font-size: clamp(3rem, 6.5vw, 5.5rem); margin: 5px 0;<br />
+            line-height: 1; padding-bottom:10px;<br />
+        }</p>
+<p>        .gradient-text {<br />
+            background: linear-gradient(to left, var(--primary), #0ea5e9);<br />
+            -webkit-background-clip: text; color: transparent;<br />
+        }</p>
+<p>        .hero p { font-size: clamp(1.1rem, 2vw, 1.2rem); color: var(--text-muted); line-height: 1.8; margin-bottom: 40px; max-width: 90%; font-weight:400;}</p>
+<p>        .hero-graphics { flex: 0.8; display: flex; justify-content: center; position: relative;}</p>
+<p>        /* کارت ۳ بعدی هیرو */<br />
+        .floating-glass-card {<br />
+            background: var(--bg-surface); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);<br />
+            border: 1px solid var(--bg-border); border-radius: 28px; padding: 30px;<br />
+            width: 100%; max-width: 380px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); transform-style: preserve-3d;<br />
+            position: relative;<br />
+        }<br />
+        body.dark-mode .floating-glass-card { background: rgba(30,41,59,0.5); box-shadow: 0 30px 60px rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.1);}</p>
+<p>        .floating-orb {<br />
+            position: absolute; border-radius:50%; background:linear-gradient(135deg, #10b981, var(--primary));<br />
+            width:50px; height:50px; z-index:-1; right: -20px; top: -20px; box-shadow: 0 0 20px rgba(16,185,129,0.4);<br />
+        }<br />
+        .orb-bottom { bottom:-20px; left:-20px; right:auto; top:auto; width:40px; height:40px; background:linear-gradient(135deg, #0ea5e9, var(--primary)); }</p>
+<p>        .ghc-head { display: flex; align-items: center; gap:12px; margin-bottom: 24px; padding-bottom: 15px; border-bottom: 1px dashed var(--bg-border);}<br />
+        .ghc-head .pulse-circ { width:12px; height:12px; background:var(--primary); border-radius:50%; box-shadow: 0 0 10px var(--primary-glow); }<br />
+        .ghc-body { margin-bottom: 25px;}</p>
+<p>        .action-btns { display: flex; gap: 10px; margin-top:20px;}<br />
+        .action-btns button { border-radius: 12px; border:none; padding:12px; font-weight:bold; cursor:pointer;}</p>
+<p>        @media (max-width: 900px) {<br />
+            .hero { flex-direction: column; text-align: center; justify-content: center; min-height: auto; padding: 150px 0 80px;}<br />
+            .hero-text { flex: none; display: flex; flex-direction: column; align-items: center;}<br />
+            .hero p { max-width: 100%; }<br />
+            .hero-graphics { margin-top: 50px; }<br />
+            .stroke-text { margin-bottom:10px; }<br />
+        }</p>
+<p>        /* =========================================<br />
+           متن اسکرولی خارق‌العاده GSAP<br />
+           ========================================= */<br />
+        .magic-text-section {<br />
+            background-color: var(--bg-body); padding: 10vh 0; display: flex; align-items: center; justify-content: center;<br />
+            overflow: hidden; border-top: 1px dashed var(--bg-border); border-bottom: 1px dashed var(--bg-border);<br />
+        }</p>
+<p>        .scroll-text-container { width: 90%; max-width: 1050px; text-align: center; direction: rtl; }</p>
+<p>        .magic-word {<br />
+            display: inline-block; font-size: clamp(2.2rem, 5vw, 4.5rem); font-weight: 900; line-height: 1.4;<br />
+            margin: 0 6px; perspective: 800px; color: var(--text-main);<br />
+        }<br />
+        .magic-word span { display: inline-block; transform-origin: 50% 100%; opacity: 0.1; will-change: transform, opacity; text-shadow: 0 5px 15px rgba(0,0,0,0.05); }<br />
+        .text-glow span { background: linear-gradient(to right, var(--primary), #0ea5e9); -webkit-background-clip: text; color: transparent; text-shadow: 0 10px 30px var(--primary-glow); }</p>
+<p>        /* =========================================<br />
+           Timeline خفن + نوار پیشرفت کشویی<br />
+           ========================================= */<br />
+        .steps-section { padding: 120px 0; }<br />
+        .sec-title { text-align: center; margin-bottom: 70px;}<br />
+        .sec-title h2 { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 900; margin-bottom: 15px; }<br />
+        .sec-title p { color: var(--text-muted); font-size: 1.15rem; }</p>
+<p>        .timeline-wrapper { max-width: 850px; margin: 0 auto; position: relative; }</p>
+<p>        /* رگ لاین زمینه خاموش */<br />
+        .timeline-line {<br />
+            position: absolute; right: 30px; top: 0; bottom: 0; width: 4px; background: var(--bg-border); border-radius: 10px; z-index:0;<br />
+        }<br />
+        /* لاین پر شونده با رنگ اختصاصی و افکت باطری پر شده */<br />
+        .timeline-progress {<br />
+            position: absolute; right: 30px; top: 0; width: 4px; background: linear-gradient(to bottom, var(--primary), #0ea5e9);<br />
+            border-radius: 10px; z-index:1; height: 0%; box-shadow: 0 0 20px var(--primary-glow);<br />
+        }</p>
+<p>        .tl-item { position: relative; padding-right: 90px; margin-bottom: 70px; z-index: 2;}<br />
+        .tl-item:last-child { margin-bottom: 0; }</p>
+<p>        /* دایره‌ها */<br />
+        .tl-dot {<br />
+            position: absolute; right: 17px; top: 15px; width: 30px; height: 30px; border-radius: 50%;<br />
+            background: var(--bg-surface-solid); border: 4px solid var(--bg-border);<br />
+            transition: all 0.5s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.05);<br />
+        }</p>
+<p>        /* استایل وقتی دایره در نوار روشن می شود (GSAP بهش کلاس میده) */<br />
+        .tl-dot.active { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); transform: scale(1.2);}</p>
+<p>        .tl-content {<br />
+            background: var(--card-glass); backdrop-filter: blur(15px); border: 1px solid var(--bg-border);<br />
+            padding: 35px; border-radius: 24px; transition: 0.3s;<br />
+        }<br />
+        body.dark-mode .tl-content { box-shadow: inset 0 2px 2px rgba(255,255,255,0.02), 0 10px 30px rgba(0,0,0,0.2); }<br />
+        .tl-content:hover { transform: translateX(-10px); border-color: var(--primary); box-shadow: 0 20px 40px var(--primary-glow);}</p>
+<p>        .tl-content h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 12px; display: flex; align-items:center; gap:10px;}<br />
+        .tl-content h3 span { color:var(--primary); font-size:2rem;}<br />
+        .tl-content p { color: var(--text-muted); line-height: 1.9; font-size: 1.05rem;}</p>
+<p>        @media (max-width: 768px) {<br />
+            .timeline-line, .timeline-progress { right: 20px; }<br />
+            .tl-item { padding-right: 60px; }<br />
+            .tl-dot { right: 7px; top: 20px; }<br />
+            .tl-content { padding: 25px;}<br />
+        }</p>
+<p>        /* =========================================<br />
+           جعبه بنتوی آپدیت شده (Bento 3D / Counters)<br />
+           ========================================= */<br />
+        .bento-section { padding: 0 0 120px; }<br />
+        .bento-grid {<br />
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; grid-auto-rows: minmax(280px, auto);<br />
+            perspective: 1500px; /* برای ورود ۳ بعدی کارت ها */<br />
+        }</p>
+<p>        .bento-box {<br />
+            background: var(--card-glass); backdrop-filter: blur(25px); border: 1px solid var(--bg-border);<br />
+            border-radius: 32px; padding: 40px; display: flex; flex-direction: column; overflow: hidden; position: relative; transition: box-shadow 0.4s ease;<br />
+        }<br />
+        .bento-box::before {<br />
+            content: ''; position: absolute; inset:0; opacity: 0; pointer-events: none; z-index:0;<br />
+            background: radial-gradient(800px circle at var(--x, 50%) var(--y, 50%), var(--primary-glow), transparent 40%);<br />
+            transition: opacity 0.5s ease;<br />
+        }<br />
+        .bento-box:hover::before { opacity: 1; }<br />
+        .bento-box > * { position: relative; z-index: 1;}<br />
+        .bento-box:hover { border-color: rgba(255,255,255,0.3); }<br />
+        body.dark-mode .bento-box:hover { box-shadow: 0 20px 50px rgba(0,0,0,0.5); }</p>
+<p>        .bb-icon { width: 55px; height: 55px; background: var(--bg-body); border-radius: 18px; display: grid; place-items: center; font-size: 1.6rem; color: var(--primary); margin-bottom: 25px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);}<br />
+        .bb-large { grid-column: span 2; grid-row: span 2; background: linear-gradient(145deg, rgba(15,118,110,0.1), rgba(14,165,233,0.05));}<br />
+        .bb-wide { grid-column: span 2; display:flex; flex-direction:row; justify-content:space-between; align-items:center;}<br />
+        .bb-small { grid-column: span 1; }</p>
+<p>        .bb-title { font-size: 1.6rem; font-weight: 900; margin-bottom: 15px; }<br />
+        .bento-box p { color: var(--text-muted); line-height: 1.8; font-size:1.05rem;}</p>
+<p>        /* افکت داخل باکس اصلی بنتو: کارت های لایتنر کوچک مینیاتوری */<br />
+        .bb-large-visual { position: absolute; left:-10px; bottom:-30px; right: -10px; height: 180px; display:flex; justify-content:center; align-items:flex-end; gap: 10px;}<br />
+        .mini-c { width: 130px; height: 160px; background:var(--bg-surface-solid); border:1px solid var(--bg-border); border-radius:15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: translateY(40px) rotate(-10deg); opacity:0.8;}<br />
+        body.dark-mode .mini-c {box-shadow: 0 10px 20px rgba(0,0,0,0.5);}<br />
+        .mini-c-active { transform: translateY(-20px) rotate(5deg) scale(1.1); z-index:2; opacity:1; border-color:var(--primary); padding:15px; display:flex; flex-direction:column; background: linear-gradient(to bottom right, var(--bg-surface-solid), var(--bg-body));}</p>
+<p>        /* بخش Counter Number ها */<br />
+        .stats-wrap { display: flex; gap: 30px; margin-top: auto; padding-top: 40px; z-index: 5;}<br />
+        .stat { display:flex; flex-direction:column; gap:5px;}<br />
+        .stat-num-container { font-size: 2.8rem; font-weight:900; color: var(--text-main); font-family: Tahoma; display:flex; align-items:baseline;}<br />
+        .stat-label { font-size:0.95rem; color:var(--primary); font-weight:bold;}</p>
+<p>        @media (max-width: 1024px) {<br />
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }<br />
+            .bb-large { grid-column: span 2; grid-row: span 1; padding-bottom:200px; /* جا برای بصری */}<br />
+        }<br />
+        @media (max-width: 600px) {<br />
+            .bento-grid { grid-template-columns: 1fr; }<br />
+            .bb-wide, .bb-large, .bb-small { grid-column: span 1; }<br />
+            .bb-wide { flex-direction: column; text-align:right; align-items:flex-start; gap:20px;}<br />
+            .bb-wide .bb-icon { align-self:flex-end;}<br />
+            .bb-large { padding-bottom:250px;}<br />
+        }</p>
+<p>        /* =========================================<br />
+           Mesh CTA جذاب و متحرک پایین<br />
+           ========================================= */<br />
+        .cta-wrap {<br />
+            border-radius: 40px; padding: 70px 40px; text-align: center; color: white; margin-bottom: 80px; position:relative; overflow:hidden;<br />
+            /* Animated background Mesh */<br />
+            background: linear-gradient(-45deg, var(--primary), #0ea5e9, #6366f1, #10b981);<br />
+            background-size: 300% 300%;<br />
+            animation: gradientMove 15s ease infinite;<br />
+        }<br />
+        @keyframes gradientMove {<br />
+            0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;}<br />
+        }</p>
+<p>        .cta-wrap::after {<br />
+            content: ''; position:absolute; width:150%; height:150%; top:-25%; left:-25%; pointer-events:none; z-index:1;<br />
+            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.3) 100%);<br />
+        }</p>
+<p>        .cta-content { position: relative; z-index: 3;}<br />
+        .cta-content h2 { font-size: clamp(2.2rem, 4.5vw, 3.5rem); font-weight: 900; margin-bottom: 25px; line-height: 1.2;}<br />
+        .cta-btn { background: white; color: var(--primary); padding: 18px 50px; font-size: 1.3rem;}<br />
+        .cta-btn:hover { background: var(--bg-body); box-shadow: 0 15px 40px rgba(0,0,0,0.25);}<br />
+        body.dark-mode .cta-btn { background: var(--bg-body); color: var(--primary); box-shadow: 0 15px 40px rgba(0,0,0,0.5);}</p>
+<p>        footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--bg-border); color: var(--text-muted); font-size: 0.95rem; }<br />
+        footer .foot-links { display: flex; justify-content: center; gap: 20px; margin-top: 15px;}<br />
+        footer a:hover { color: var(--primary); }<br />
+    </style>
+
+&nbsp;
+
+<script>
+        // Init تم خیلی زود که فیلکر نزند
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+    </script>
+
+<!-- افکت نوری بک گراند -->
+<div class="ambient-light orb-1"></div>
+<div class="ambient-light orb-2"></div>
+<!-- هدر شیشه ای -->
+
+<header id="mainNav"><a class="logo" href="#">
+<i class="fa-solid fa-notes-medical" style="font-size: 1.8rem; margin-left: 3px;"></i> دکتر‌خستـه
+</a><nav id="navLinks" class="nav-links"><a href="#">متدولوژی پلتفرم</a>
+<a href="#">اکوسیستم‌ها</a>
+<a href="#">رفرنس ۱۴۰۳</a>
+<!-- برای موبایل دکمه ورود در منو هم میذاریم -->
+<a class="btn-cta" style="display: none; text-align: center;" href="#">ورود یا ثبت‌نام</a></nav>
+<div class="header-actions"><button id="themeToggle" class="icon-btn"><i class="fa-solid fa-moon"></i></button>
+<a class="btn-cta" href="#">اکسس رزیدنت <i class="fa-solid fa-user-doctor" style="margin-right: 8px;"></i></a>
+<button id="menuBtn" class="menu-toggle"><i class="fa-solid fa-bars"></i></button></div>
+</header><!-- ۱. هیرو: تیتر بمب -->
+
+<section class="hero container">
+<div class="hero-text gsap-hero">
+<h1>یادگیری طبّی،
+<span class="stroke-text">بدون فـرامـوشـی</span>
+فـرا رسیده است.</h1>
+الگوریتم‌هـای ما با الگوبرداری از ساختارِ مغـزِ انسان (منحنی فراموشی ابینگهاوس)، تک‌تک خطوط حیاتی هاریسون را قبل از محو شدن در تاریکی ذهنتان بازآفرینی می‌کنند.
+<div style="display: flex; gap: 15px; flex-wrap: wrap;"><a class="btn-cta" href="#how"><i class="fa-solid fa-microchip" style="margin-left: 8px;"></i> درک مکانیزم هوش‌مصنوعی</a>
+<a class="btn-cta btn-outline" href="#"><i class="fa-solid fa-play" style="margin-left: 8px;"></i> کانسپت بصری</a></div>
+</div>
+<div class="hero-graphics gsap-hero-right"><!-- یک پنل گرافیکی ۳D -->
+<div class="floating-glass-card" id="animCard">
+<div class="floating-orb"></div>
+<div class="floating-orb orb-bottom"></div>
+<div class="ghc-head">
+<div class="pulse-circ"></div>
+<div>
+<div style="font-weight: 800; font-size: 1.1rem; color: var(--text-main);">تطبیق حافظه دائم</div>
+<div style="font-size: 0.85rem; color: var(--text-muted);">اسلات ۲: تکرار با تاخیر فعال</div>
+</div>
+</div>
+<div class="ghc-body"><span style="background: var(--bg-border); color: var(--primary); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(15,118,110,0.3);">اطفال | نلسون</span>
+<h3 style="margin-top: 15px; font-weight: 800; font-size: 1.15rem; color: var(--text-main); line-height: 1.5;">سن پاتوگنومونیک اینواژیناسیون روده در کودکان چه بازه‌ای است؟</h3>
+</div>
+<div style="height: 2px; background: var(--bg-border); margin-bottom: 15px;"></div>
+<div class="action-btns"><button style="flex: 1; background: rgba(239, 68, 68, 0.1); color: #ef4444;"><i class="fa-solid fa-arrow-rotate-left"></i> مردود</button>
+<button style="flex: 1; background: var(--primary); color: white; box-shadow: 0 10px 20px var(--primary-glow);"><i class="fa-solid fa-check-double"></i> بلد بودم</button></div>
+</div>
+</div>
+</section><!-- ۲. اسکرول سه‌بعدی کلمات (افکت اپلی حفظ شده با تم تمیزتر) -->
+
+<section id="magicSection" class="magic-text-section">
+<div class="scroll-text-container" id="myTextTarget">نخوابیدن و پرخوانی هنر نیست؛ مرور استراتژیک قدرت مطلق است. وقتی در نقطه‌ی بحرانِ بالین، دوز حیاتیِ یک داروی اورژانس را با تکنولوژی لایتنر از اعماق قشر کورتکس بازیابی می‌کنید، ما ماموریتمان را به پایان رسانده‌ایم.</div>
+</section><!-- ۳. نحوه عملکرد تایم لاین دار با نوار رنگی متحرک -->
+
+<section id="how" class="steps-section container">
+<div class="sec-title">
+<h2 class="gradient-text">فیزیولـوژی یک تحـول آموزشـی</h2>
+درون سامانه چه اتفاقاتی می‌افتد؟ مسیر تسلط زیر ذره‌بین.
+
+</div>
+<div class="timeline-wrapper" id="timelineContainer">
+<div class="timeline-line"></div>
+<!-- این نوار بر اساس اسکرول پر می شود -->
+<div class="timeline-progress" id="timeLineFill"></div>
+<div class="tl-item step-elem">
+<div class="tl-dot"></div>
+<div class="tl-content">
+<h3><span>01.</span> درسنامه‌ کپسولارینگ</h3>
+دیگر خبری از ۳۰۰۰ صفحه پی‌دی‌افِ طاقت‌فرسا نیست. کل متون رفرنس، اسلایس به اسلایس تجزیه شده و توسط متخصصین مربوطه، قسمت‌های پرحجم خط‌خورده تا نکات تِست‌زا را بخوانید.
+
+</div>
+</div>
+<div class="tl-item step-elem">
+<div class="tl-dot"></div>
+<div class="tl-content">
+<h3><span>02.</span> برخورد بلافاصله (Mini Exams)</h3>
+در انتهای هر کپسول، از شما بازخورد می‌گیریم! ده‌ها تست بالینی دقیق از همان پاراگراف رو در روی شما ظاهر میشود تا خطای ذهن خود را بسنجید و یادگیری عمیق در سیناپس شکل بگیرد.
+
+</div>
+</div>
+<div class="tl-item step-elem">
+<div class="tl-dot"></div>
+<div class="tl-content">
+<h3><span>03.</span> استارتر جعبه لایتنـر</h3>
+سوالات غلط زده و نکاتی که احساس میکنید فرّار هستند را مستقیماً از روی پلتفرم به تاریک‌خانه‌ی لایتنر ما پرتاب کنید! هوش مصنوعی وظیفه‌ یادآوری آنها در بازه ۲، ۶ و ۱۴ روز بعد را به عهده می‌گیرد.
+
+</div>
+</div>
+</div>
+</section><!-- ۴. شبکه Bento Box گِرید سه بعدی -->
+
+<section class="bento-section container">
+<div class="bento-grid">
+
+<!-- Box Wide Top -->
+<div class="bento-box bb-wide bento-reveal mouse-track">
+<div>
+<h3 class="bb-title">ارکستر کامل برای رزیدنتی!</h3>
+<p style="max-width: 400px;">بخش های فارما، زنان، داخلی، اطفال و بیولوژی همه داخل جیب روپوش شما.</p>
+
+</div>
+<div class="bb-icon" style="background: var(--primary); color: white; width: 70px; height: 70px; font-size: 2rem; box-shadow: 0 10px 20px var(--primary-glow); margin: 0;"><i class="fa-solid fa-stethoscope"></i></div>
+</div>
+<!-- Box -->
+<div class="bento-box bb-small bento-reveal mouse-track">
+<div class="bb-icon" style="color: #ef4444;"><i class="fa-solid fa-chart-line"></i></div>
+<h3 class="bb-title" style="font-size: 1.4rem;">ردیاب آنالیتیک</h3>
+نمایش نقاط ضعف به صورت گراف؛ اینکه قلب را خوب می‌فهمید ولی غدد در کماست!
+
+</div>
+<!-- Box -->
+<div class="bento-box bb-small bento-reveal mouse-track">
+<div class="bb-icon" style="color: #f59e0b;"><i class="fa-solid fa-cloud-moon"></i></div>
+<h3 class="bb-title" style="font-size: 1.4rem;">بدون خیرگی</h3>
+تم دیفالت بر اساس ساعت شیفت؛ کدگذاری با Contrast Rating AAA مناسب محیط‌های ایزوله بیمارستان.
+
+</div>
+<!-- Box Large (Main Box with Counter & Visuals) -->
+<div class="bento-box bb-large bento-reveal mouse-track">
+<div class="bb-icon"><i class="fa-solid fa-database"></i></div>
+<h3 class="bb-title gradient-text" style="font-size: 2.2rem; display: inline-block;">بانک ژرف، تکرار منظم</h3>
+ساخته شده از استخوان و پوست رفرنس های اعلامی وزارتخانه برای برد کشوری، تا اطمینان ۱۰۰ درصد را برای پزشکان محیا کنیم.
+
+<!-- GSAP COUNTER -->
+<div class="stats-wrap">
+<div class="stat">
+<div class="stat-num-container"><span class="stat-num" data-val="12">0</span><span>K</span></div>
+<span class="stat-label">دیتـاکارت آنلاین</span>
+
+</div>
+<div class="stat">
+<div class="stat-num-container"><span style="margin-right: 8px;">+</span><span class="stat-num" data-val="40">0</span></div>
+<span class="stat-label">سورس کپسولایز</span>
+
+</div>
+<div class="stat">
+<div class="stat-num-container"><span style="margin-right: 8px;">%</span><span class="stat-num" data-val="98">0</span></div>
+<span class="stat-label">پوشش قطعی سوالات</span>
+
+</div>
+</div>
+<!-- Graphic Effect -->
+<div class="bb-large-visual">
+<div class="mini-c" style="transform: translateY(30px) rotate(-15deg) scale(0.9); opacity: 0.6; z-index: 0;"></div>
+<div class="mini-c mini-c-active">
+<div style="width: 30px; height: 30px; background: #10b981; border-radius: 50%; margin-bottom: 10px; display: grid; place-items: center; color: white; font-size: 10px;"><i class="fa-solid fa-check"></i></div>
+<div style="background: var(--bg-border); width: 90%; height: 4px; margin-bottom: 5px;"></div>
+<div style="background: var(--bg-border); width: 60%; height: 4px;"></div>
+<div style="background: #10b981; color: white; border-radius: 8px; font-size: 10px; font-weight: bold; margin-top: auto; text-align: center; padding: 3px 0;">موردتایید | فردا مجدد</div>
+</div>
+<div class="mini-c" style="transform: translateY(20px) rotate(10deg); opacity: 0.8; z-index: 1;"></div>
+</div>
+</div>
+</div>
+</section><!-- ۵. دکمه قدرتمند و پویای پایین (MESH BACKGROUND) -->
+
+<section class="container">
+<div class="cta-wrap" id="finalCta">
+<div class="cta-content">
+<h2>درب اصلی اورژانس و رزیدنتی از اینجا باز می‌شود!</h2>
+<p style="margin-bottom: 40px; font-size: 1.15rem; opacity: 0.9;">ارائه دو اکوسیستم تستی رایگان برای راستی آزمایی هوش الگوریتم. (همین الان چک کنید)</p>
+<a class="btn-cta cta-btn" href="#">
+<span>اکانت خود را اکتیو کنید</span></a>
+<div style="width: 35px; height: 35px; background: rgba(0,0,0,0.1); border-radius: 50%; margin-right: 15px; display: grid; place-items: center;"><i class="fa-solid fa-angle-left"></i></div>
+&nbsp;
+
+</div>
+</div>
+</section><footer>دیزاین و برنامه‌نویسی مبتنی بر عشق و اعصاب‌پولادین | © 1403
+<div class="foot-links"><a href="#">پروتکل بازپرداخت</a>
+<a href="#">شرح سرویس‌دهی</a>
+<a href="#">پشتیبان چت</a></div>
+</footer><!-- ========================================= کتابخانه‌های GSAP (ScrollTrigger + Core) ========================================= -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+        // ۱. حالت دارک و آیکون آن 
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        const updateIcon = () => themeIcon.className = document.body.classList.contains('dark-mode') ? "fa-solid fa-sun" : "fa-solid fa-moon";
+        updateIcon();
+        themeToggle.addEventListener('click', () => {
+            const dark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', dark ? 'dark' : 'light');
+            updateIcon();
+        });
+
+        // ۲. واکنشگرایی هدر وبسایت
+        const nav = document.getElementById('mainNav');
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth > 900) {
+                if(window.scrollY > 80) {
+                    nav.style.width = "82%";
+                    nav.style.padding = "10px 24px";
+                    nav.style.backdropFilter = "blur(30px)";
+                } else {
+                    nav.style.width = "90%";
+                    nav.style.padding = "12px 24px";
+                }
+            }
+        });
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuBtn.innerHTML = navLinks.classList.contains('active') ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+        });
+
+        // ۳. ترکینگ نشانگر موس روی Bento Box ها (همون Effect اسپات لایت)
+        document.querySelectorAll('.mouse-track').forEach(box => {
+            box.addEventListener('mousemove', e => {
+                const r = box.getBoundingClientRect();
+                box.style.setProperty('--x', `${e.clientX - r.left}px`);
+                box.style.setProperty('--y', `${e.clientY - r.top}px`);
+            });
+        });
+
+        // ===========================================
+        // ۴. مرکز قدرت: اسکریپت‌های انیمیشنی G.S.A.P 🔥
+        // ===========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // - الف) هیرو: هم حالت Entrance هم حالت کششی با اسکرول (Scrub)
+            // ورود به صفحه
+            gsap.from(".gsap-hero h1", {y: 80, opacity:0, duration: 1.2, ease:"power4.out"});
+            gsap.from(".gsap-hero p", {y: 50, opacity:0, duration: 1.2, ease:"power3.out", delay: 0.2});
+            gsap.from(".gsap-hero .btn-cta", {y: 30, opacity:0, duration: 0.8, stagger: 0.15, delay:0.4});
+            gsap.from(".gsap-hero-right", {x: -120, opacity: 0, rotationY: 45, scale:0.8, duration: 1.5, ease: "back.out(1.2)"}, "-=1.2");
+            
+            // معلق موندن و نبض همیشگی گلس باکس در آسمان (Yoyo Effect)
+            gsap.to("#animCard", {y:-20, rotationX:2, rotationY:-2, rotationZ:1, repeat:-1, yoyo:true, duration:5, ease:"sine.inOut"});
+            
+            // هنگام اسکرول یه کوچولو زوم‌اوت بشه و بره پایین
+            gsap.to("#animCard", {
+                y: 100, scale: 0.9, opacity:0.3,
+                scrollTrigger: {
+                    trigger: ".hero", start: "top top", end: "bottom top", scrub: true
+                }
+            });
+
+
+            // - ب) حفظ همون جادوی Text Reveal معروف: متن هایی که روبروی هم ظاهر می‌شن
+            const textEl = document.getElementById("myTextTarget");
+            const originalWords = textEl.innerText.split(" ");
+            textEl.innerHTML = ""; 
+            
+            originalWords.forEach((word) => {
+                if(!word.trim()) return;
+                const maskSpan = document.createElement("span");
+                maskSpan.className = "magic-word";
+
+                const innerSpan = document.createElement("span");
+                innerSpan.innerText = word;
+                
+                // کلماتی که باید در تیتر بدرخشند مثل لایتنر:
+                if (word.includes('پرخوانی') || word.includes('هنر') || word.includes('نیست') || word.includes('قدرت') || word.includes('لایتنر') || word.includes('ابینگهاوس')) {
+                    innerSpan.classList.add("text-glow");
+                }
+
+                maskSpan.appendChild(innerSpan);
+                textEl.appendChild(maskSpan);
+                textEl.appendChild(document.createTextNode(" "));
+            });
+
+            const wordsToAnim = textEl.querySelectorAll(".magic-word span");
+            gsap.set(wordsToAnim, { rotateX: -90, y: "80%", opacity: 0.05 });
+
+            const textTimeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#magicSection",   
+                    pin: true,                  
+                    start: "center center",     
+                    end: "+=150%",              
+                    scrub: 1.5                  
+                }
+            });
+
+            textTimeline.to(wordsToAnim, {
+                rotateX: 0, y: "0%", opacity: 1, duration: 1, stagger: 0.08, ease: "power2.out"
+            });
+            textTimeline.to({}, {duration: 0.5}); // مکث زیبا برای خونده شدن
+
+
+            // - پ) کشیده شدن Timeline progress (باطری پر کن) 🔋
+            gsap.to("#timeLineFill", {
+                height: "100%",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#timelineContainer",
+                    start: "top center", // وقتی اول بخش وسط رسید روشن میشه
+                    end: "bottom center", // تا اخر بخش میاد پایین
+                    scrub: true
+                }
+            });
+
+            // هایلایت کردن نقطه ها زمانی که نوار میرسه بهشون!
+            const stepsElems = gsap.utils.toArray('.step-elem');
+            stepsElems.forEach((step) => {
+                const dot = step.querySelector('.tl-dot');
+                ScrollTrigger.create({
+                    trigger: step,
+                    start: "top center+=50", // نوار پر شده دقیقا روی اینه که برسه نقطه ها قرمزشن!
+                    toggleClass: {targets: dot, className: "active"} // اتوماتیک توگِل کلاس active (سی‌اس‌اس نوشته شده براش بالا)
+                });
+                
+                // Entrance anim خود کارت‌های استپ (Slide right in)
+                gsap.from(step, {
+                    scrollTrigger: { trigger: step, start: "top 85%" },
+                    x: -80, opacity:0, duration:1, ease: "power3.out"
+                });
+            });
+
+
+            // - ت) بنتوها: Stagger + ThreeD perspective effect
+            gsap.set(".bento-reveal", { y: 150, rotationX: -15, opacity: 0, scale:0.9 });
+            gsap.to(".bento-reveal", {
+                y: 0, rotationX: 0, opacity: 1, scale:1,
+                duration: 1.2, 
+                stagger: 0.15, 
+                ease: "power4.out",
+                scrollTrigger: {
+                    trigger: ".bento-grid",
+                    start: "top 75%", 
+                }
+            });
+
+
+            // - ث) تایمر هوشمند Number Counter توی همون جعبه بنتو 🎯
+            const numbers = document.querySelectorAll(".stat-num");
+            numbers.forEach((numObj) => {
+                const finalTarget = parseInt(numObj.getAttribute("data-val"));
+                // با یه شیء آبجکت خالی صفر مقدارها رو توئین میکنیم، هردفعه آپدیت اینرس متن!
+                let tempCount = { val: 0 };
+                
+                gsap.to(tempCount, {
+                    val: finalTarget,
+                    duration: 3, 
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: ".stats-wrap", // کی انیمیشن استارت شه؟ 
+                        start: "top 80%" 
+                    },
+                    onUpdate: function() {
+                        // هرفریم درجا این عدد جایگزین innerHtml ما میشه
+                        numObj.innerHTML = Math.floor(tempCount.val);
+                    }
+                });
+            });
+
+
+            // - ج) پدیدار شدن (Parallax In) لست بخش CTA
+            gsap.from("#finalCta", {
+                scrollTrigger: { trigger: "#finalCta", start: "top 90%" },
+                y: 100, scale:0.95, opacity: 0, duration: 1.5, ease: "elastic.out(1, 0.7)"
+            });
+
+        });
+    </script>
