@@ -5,16 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>drkhaste | پلتفرم هوشمند آموزش پزشکی</title>
 
-    <!-- Scripts & SDKs -->
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <script src="/_sdk/element_sdk.js"></script>
-    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Local Dependencies -->
+    <script src="assets/js/tailwind.min.js"></script>
 
     <style>
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('assets/fonts/Vazirmatn-Regular.woff2') format('woff2');
+            font-weight: 400; font-display: swap;
+        }
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('assets/fonts/Vazirmatn-Bold.woff2') format('woff2');
+            font-weight: 700; font-display: swap;
+        }
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('assets/fonts/Vazirmatn-Black.woff2') format('woff2');
+            font-weight: 900; font-display: swap;
+        }
+
         :root {
             --primary: #0f766e;
             --primary-hover: #0d6e64;
@@ -57,7 +67,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Glassmorphism Classes */
+        /* Glassmorphism */
         .glass-card {
             background: var(--card-glass);
             backdrop-filter: blur(20px);
@@ -73,21 +83,7 @@
             border-bottom: 1px solid var(--bg-border);
         }
 
-        .glass-button {
-            background: linear-gradient(135deg, var(--primary) 0%, rgba(15, 118, 110, 0.7) 100%);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 24px var(--primary-glow);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-input {
-            background: var(--bg-surface);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--bg-border);
-            transition: all 0.3s ease;
-        }
-
-        /* Ambient Light Orbs */
+        /* Ambient Orbs */
         .ambient-light {
             position: fixed; border-radius: 50%; filter: blur(120px); z-index: 0;
             animation: moveOrb 20s infinite alternate; pointer-events: none; opacity: 0.6;
@@ -101,54 +97,41 @@
             100% { transform: translate(150px, 150px) scale(1.2); }
         }
 
-        /* Smooth Scroll */
-        html { scroll-behavior: smooth; }
-
-        /* Scroll Progress Bar */
-        #scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 4px;
-            background: linear-gradient(to left, var(--primary), #0ea5e9);
-            z-index: 1001;
-            transition: width 0.1s ease;
-        }
-
-        /* Custom Utilities */
+        /* Utils */
         .gradient-text {
             background: linear-gradient(to left, var(--primary), #0ea5e9);
             -webkit-background-clip: text;
             color: transparent;
         }
-
         .stroke-text {
             -webkit-text-stroke: 2px var(--primary);
             color: transparent;
             text-shadow: 0 0 20px var(--primary-glow);
         }
+        #scroll-progress {
+            position: fixed; top: 0; left: 0; width: 0%; height: 4px;
+            background: linear-gradient(to left, var(--primary), #0ea5e9);
+            z-index: 1001; transition: width 0.1s ease;
+        }
     </style>
+    <link rel="stylesheet" href="assets/css/all.min.css">
 </head>
 <body class="h-full">
     <div id="scroll-progress"></div>
     <div class="ambient-light orb-1"></div>
     <div class="ambient-light orb-2"></div>
 
-    <!-- Navigation -->
     <header id="mainNav" class="fixed top-5 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl glass-nav rounded-full flex items-center justify-between px-6 py-3 z-[1000] transition-all duration-400">
         <a href="#" class="logo text-xl md:text-2xl font-black flex items-center gap-2 text-[var(--primary)]">
-            <i class="fa-solid fa-notes-medical text-2xl"></i>
+            <i class="fa-solid fa-notes-medical"></i>
             <span id="nav-brand">drkhaste</span>
         </a>
-
         <nav id="navLinks" class="hidden md:flex items-center gap-8">
             <a href="#how" class="text-sm font-semibold hover:text-[var(--primary)] transition-colors">متدولوژی</a>
             <a href="#features" class="text-sm font-semibold hover:text-[var(--primary)] transition-colors">امکانات</a>
             <a href="#courses" class="text-sm font-semibold hover:text-[var(--primary)] transition-colors">درسنامه‌ها</a>
             <a href="#flashcards" class="text-sm font-semibold hover:text-[var(--primary)] transition-colors">فلش‌کارت</a>
         </nav>
-
         <div class="flex items-center gap-3">
             <button id="themeToggle" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-[var(--bg-border)] text-[var(--text-main)] transition-all">
                 <i class="fa-solid fa-moon"></i>
@@ -163,11 +146,10 @@
         </div>
     </header>
 
-    <!-- Mobile Menu Overlay -->
     <div id="mobileMenu" class="fixed inset-0 z-[999] hidden">
         <div class="absolute inset-0 bg-black/20 backdrop-blur-md" onclick="toggleMenu()"></div>
         <div class="absolute top-24 left-4 right-4 glass-card rounded-3xl p-8 flex flex-col items-center gap-6 animate-fadeInUp">
-            <a href="#how" onclick="toggleMenu()" class="text-lg font-bold">متدولوژی پلتفرم</a>
+            <a href="#how" onclick="toggleMenu()" class="text-lg font-bold">متدولوژی</a>
             <a href="#features" onclick="toggleMenu()" class="text-lg font-bold">امکانات</a>
             <a href="#courses" onclick="toggleMenu()" class="text-lg font-bold">درسنامه‌ها</a>
             <a href="#flashcards" onclick="toggleMenu()" class="text-lg font-bold">فلش‌کارت</a>
@@ -175,9 +157,9 @@
         </div>
     </div>
 
-    <main class="relative z-10">
+    <main class="relative z-10 pt-32">
         <!-- Hero Section -->
-        <section class="hero min-h-screen flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20 px-6 pt-32 pb-20 max-w-7xl mx-auto overflow-hidden">
+        <section class="min-h-screen flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20 px-6 max-w-7xl mx-auto overflow-hidden">
             <div class="hero-text flex-1 text-center md:text-right gsap-hero">
                 <div class="inline-flex items-center gap-2 glass-card px-4 py-2 rounded-full mb-8 animate-fadeInUp">
                     <span class="w-2 h-2 bg-teal-500 rounded-full animate-pulse"></span>
@@ -189,7 +171,7 @@
                     فـرا رسیده است.
                 </h1>
                 <p id="hero-subtitle" class="text-base md:text-lg text-[var(--text-muted)] leading-relaxed mb-10 max-w-2xl mx-auto md:mx-0">
-                    الگوریتم‌هـای ما با الگوبرداری از ساختارِ مغـزِ انسان، تک‌تک خطوط حیاتی رفرنس‌ها را قبل از محو شدن در تاریکی ذهنتان بازآفرینی می‌کنند.
+                    الگوریتم‌های ما با الگوبرداری از ساختارِ مغزِ انسان، مطالب حیاتی رفرنس‌ها را قبل از محو شدن در تاریکی ذهنتان بازآفرینی می‌کنند.
                 </p>
                 <div class="flex flex-wrap items-center justify-center md:justify-start gap-4">
                     <button onclick="openLoginModal()" class="px-8 py-4 rounded-2xl bg-[var(--primary)] text-white font-bold text-lg shadow-xl hover:translate-y-[-4px] transition-all flex items-center gap-3">
@@ -206,199 +188,98 @@
             <div class="hero-graphics flex-1 flex justify-center relative gsap-hero-right">
                 <div id="animCard" class="floating-glass-card w-full max-w-[380px] p-8 rounded-[2rem] glass-card relative z-10">
                     <div class="absolute -top-5 -right-5 w-16 h-16 bg-gradient-to-br from-emerald-400 to-[var(--primary)] rounded-full blur-xl opacity-50"></div>
-                    <div class="ghc-head flex items-center gap-4 mb-8 pb-6 border-b border-dashed border-[var(--bg-border)]">
+                    <div class="flex items-center gap-4 mb-8 pb-6 border-b border-dashed border-[var(--bg-border)]">
                         <div class="w-3 h-3 bg-[var(--primary)] rounded-full shadow-[0_0_10px_var(--primary-glow)] animate-pulse"></div>
-                        <div>
-                            <div class="font-black text-sm">تطبیق حافظه دائم</div>
-                            <div class="text-[var(--text-muted)] text-[10px]">اسلات ۲: تکرار با تاخیر فعال</div>
-                        </div>
+                        <div class="font-black text-sm">تطبیق حافظه دائم</div>
                     </div>
-                    <div class="ghc-body mb-8">
+                    <div class="mb-8">
                         <span class="bg-[var(--bg-border)] text-[var(--primary)] px-3 py-1 rounded-lg text-[10px] font-bold border border-[var(--primary)]/20">اطفال | نلسون</span>
-                        <h3 class="mt-4 font-bold text-lg leading-relaxed">سن پاتوگنومونیک اینواژیناسیون روده در کودکان چه بازه‌ای است؟</h3>
+                        <h3 class="mt-4 font-bold text-lg leading-relaxed text-center">سن پاتوگنومونیک اینواژیناسیون روده در کودکان چه بازه‌ای است؟</h3>
                     </div>
                     <div class="flex gap-3">
-                        <button class="flex-1 py-3 rounded-xl bg-red-500/10 text-red-500 font-bold text-sm hover:bg-red-500 hover:text-white transition-all">
-                            <i class="fa-solid fa-xmark ml-1"></i> مردود
-                        </button>
-                        <button class="flex-1 py-3 rounded-xl bg-[var(--primary)] text-white font-bold text-sm shadow-lg hover:scale-105 transition-all">
-                            <i class="fa-solid fa-check-double ml-1"></i> بلد بودم
-                        </button>
+                        <button class="flex-1 py-3 rounded-xl bg-red-500/10 text-red-500 font-bold text-sm hover:bg-red-500 hover:text-white transition-all">مردود</button>
+                        <button class="flex-1 py-3 rounded-xl bg-[var(--primary)] text-white font-bold text-sm shadow-lg hover:scale-105 transition-all">بلد بودم</button>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Magic Text Section -->
-        <section id="magicSection" class="magic-text-section py-20 md:py-32 flex items-center justify-center overflow-hidden border-y border-dashed border-[var(--bg-border)] bg-[var(--bg-body)]">
-            <div id="myTextTarget" class="scroll-text-container w-[90%] max-w-[1050px] text-center text-xl md:text-5xl font-black leading-relaxed">
+        <section id="magicSection" class="py-20 flex items-center justify-center overflow-hidden border-y border-dashed border-[var(--bg-border)] bg-[var(--bg-body)]">
+            <div id="myTextTarget" class="w-[90%] max-w-[1050px] text-center text-xl md:text-5xl font-black leading-relaxed">
                 نخوابیدن و پرخوانی هنر نیست؛ مرور استراتژیک قدرت مطلق است. وقتی در نقطه‌ی بحرانِ بالین، دوز حیاتیِ یک داروی اورژانس را با تکنولوژی لایتنر از اعماق کورتکس بازیابی می‌کنید، ما ماموریتمان را به پایان رسانده‌ایم.
             </div>
         </section>
 
         <!-- Timeline Section -->
-        <section id="how" class="steps-section py-20 md:py-32 max-w-7xl mx-auto px-6">
+        <section id="how" class="py-20 md:py-32 max-w-7xl mx-auto px-6">
             <div class="sec-title text-center mb-16 md:mb-24">
                 <h2 class="gradient-text text-3xl md:text-5xl font-black mb-6">فیزیولـوژی یک تحـول آموزشـی</h2>
                 <p class="text-[var(--text-muted)] text-lg">درون سامانه چه اتفاقاتی می‌افتد؟ مسیر تسلط زیر ذره‌بین.</p>
             </div>
 
-            <div id="timelineContainer" class="timeline-wrapper max-w-3xl mx-auto relative pr-12 md:pr-24">
-                <div class="timeline-line absolute right-[21px] md:right-[30px] top-0 bottom-0 w-1 bg-[var(--bg-border)] rounded-full"></div>
-                <div id="timeLineFill" class="timeline-progress absolute right-[21px] md:right-[30px] top-0 w-1 bg-gradient-to-b from-[var(--primary)] to-[#0ea5e9] rounded-full h-0 shadow-[0_0_20px_var(--primary-glow)]"></div>
+            <div id="timelineContainer" class="max-w-3xl mx-auto relative pr-12 md:pr-24">
+                <div class="absolute right-[21px] md:right-[30px] top-0 bottom-0 w-1 bg-[var(--bg-border)] rounded-full"></div>
+                <div id="timeLineFill" class="absolute right-[21px] md:right-[30px] top-0 w-1 bg-gradient-to-b from-[var(--primary)] to-[#0ea5e9] rounded-full h-0 shadow-[0_0_20px_var(--primary-glow)]"></div>
 
-                <!-- Step 1 -->
-                <div class="tl-item step-elem relative mb-16 md:mb-24 last:mb-0">
+                <div class="step-elem relative mb-16 md:mb-24 last:mb-0">
                     <div class="tl-dot absolute right-[-41px] md:right-[-54px] top-4 w-8 h-8 rounded-full bg-[var(--bg-surface-solid)] border-4 border-[var(--bg-border)] transition-all duration-500"></div>
-                    <div class="tl-content glass-card p-8 rounded-3xl hover:translate-x-[-10px] transition-all">
+                    <div class="glass-card p-8 rounded-3xl hover:translate-x-[-10px] transition-all">
                         <h3 class="text-xl md:text-2xl font-black mb-4 flex items-center gap-3">
-                            <span class="text-[var(--primary)] text-3xl">۰۱.</span>
-                            درسنامه‌ کپسولارینگ
+                            <span class="text-[var(--primary)] text-3xl">۰۱.</span> درسنامه کپسولارینگ
                         </h3>
-                        <p class="text-[var(--text-muted)] leading-loose text-sm md:text-base">
-                            دیگر خبری از ۳۰۰۰ صفحه پی‌دی‌افِ طاقت‌فرسا نیست. کل متون رفرنس، اسلایس به اسلایس تجزیه شده و توسط متخصصین مربوطه، قسمت‌های پرحجم خط‌خورده تا فقط نکات تِست‌زا را بخوانید.
-                        </p>
+                        <p class="text-[var(--text-muted)] leading-loose text-sm md:text-base">تمام متون رفرنس تجزیه شده و توسط متخصصین، فقط نکات تِست‌زا باقی مانده است.</p>
                     </div>
                 </div>
 
-                <!-- Step 2 -->
-                <div class="tl-item step-elem relative mb-16 md:mb-24 last:mb-0">
+                <div class="step-elem relative mb-16 md:mb-24 last:mb-0">
                     <div class="tl-dot absolute right-[-41px] md:right-[-54px] top-4 w-8 h-8 rounded-full bg-[var(--bg-surface-solid)] border-4 border-[var(--bg-border)] transition-all duration-500"></div>
-                    <div class="tl-content glass-card p-8 rounded-3xl hover:translate-x-[-10px] transition-all">
+                    <div class="glass-card p-8 rounded-3xl hover:translate-x-[-10px] transition-all">
                         <h3 class="text-xl md:text-2xl font-black mb-4 flex items-center gap-3">
-                            <span class="text-[var(--primary)] text-3xl">۰۲.</span>
-                            برخورد بلافاصله (Mini Exams)
+                            <span class="text-[var(--primary)] text-3xl">۰۲.</span> Mini Exams
                         </h3>
-                        <p class="text-[var(--text-muted)] leading-loose text-sm md:text-base">
-                            در انتهای هر کپسول، از شما بازخورد می‌گیریم! ده‌ها تست بالینی دقیق از همان پاراگراف رو در روی شما ظاهر میشود تا خطای ذهن خود را بسنجید و یادگیری عمیق در سیناپس شکل بگیرد.
-                        </p>
+                        <p class="text-[var(--text-muted)] leading-loose text-sm md:text-base">تست‌های بالینی دقیق بلافاصله پس از مطالعه هر پاراگراف ظاهر می‌شوند.</p>
                     </div>
                 </div>
 
-                <!-- Step 3 -->
-                <div class="tl-item step-elem relative mb-16 md:mb-24 last:mb-0">
+                <div class="step-elem relative mb-16 md:mb-24 last:mb-0">
                     <div class="tl-dot absolute right-[-41px] md:right-[-54px] top-4 w-8 h-8 rounded-full bg-[var(--bg-surface-solid)] border-4 border-[var(--bg-border)] transition-all duration-500"></div>
-                    <div class="tl-content glass-card p-8 rounded-3xl hover:translate-x-[-10px] transition-all">
+                    <div class="glass-card p-8 rounded-3xl hover:translate-x-[-10px] transition-all">
                         <h3 class="text-xl md:text-2xl font-black mb-4 flex items-center gap-3">
-                            <span class="text-[var(--primary)] text-3xl">۰۳.</span>
-                            استارتر جعبه لایتنـر
+                            <span class="text-[var(--primary)] text-3xl">۰۳.</span> جعبه لایتنـر هوشمند
                         </h3>
-                        <p class="text-[var(--text-muted)] leading-loose text-sm md:text-base">
-                            سوالات غلط زده و نکاتی که احساس میکنید فرّار هستند را مستقیماً از روی پلتفرم به تاریک‌خانه‌ی لایتنر ما پرتاب کنید! هوش مصنوعی وظیفه‌ یادآوری آنها در بازه ۲، ۶ و ۱۴ روز بعد را به عهده می‌گیرد.
-                        </p>
+                        <p class="text-[var(--text-muted)] leading-loose text-sm md:text-base">یادآوری سوالات فرار در بازه‌های علمی ۲، ۶ و ۱۴ روز توسط هوش مصنوعی.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Bento Features Section -->
-        <section id="features" class="bento-section py-20 md:py-32 max-w-7xl mx-auto px-6">
-            <div class="sec-title text-center mb-16 md:mb-24">
+        <!-- Bento Features -->
+        <section id="features" class="py-20 md:py-32 max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 md:mb-24">
                 <h2 class="text-3xl md:text-5xl font-black mb-6">امکانات پلتفرم</h2>
-                <p class="text-[var(--text-muted)] text-lg">همه ابزارهایی که برای موفقیت در مسیر پزشکی نیاز دارید</p>
             </div>
-
-            <div class="bento-grid grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[minmax(280px,auto)]">
-                <!-- Box 1 (Wide) -->
-                <div class="bento-box md:col-span-2 glass-card p-10 rounded-[2.5rem] flex flex-col justify-between overflow-hidden relative mouse-track bento-reveal group">
-                    <div class="relative z-10">
-                        <h3 class="text-2xl font-black mb-4 group-hover:text-[var(--primary)] transition-colors">ارکستر کامل برای رزیدنتی!</h3>
-                        <p class="text-[var(--text-muted)] leading-relaxed max-w-md">بخش های فارما، زنان، داخلی، اطفال و بیولوژی همه داخل جیب روپوش شما.</p>
-                    </div>
-                    <div class="bb-icon w-20 h-20 bg-[var(--primary)] text-white rounded-3xl flex items-center justify-center text-3xl shadow-lg shadow-[var(--primary-glow)] relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-10 rounded-[2.5rem] mouse-track bento-reveal group">
+                    <div class="w-14 h-14 bg-[var(--primary)]/10 text-[var(--primary)] rounded-2xl flex items-center justify-center text-2xl mb-6">
                         <i class="fa-solid fa-stethoscope"></i>
                     </div>
+                    <h3 class="text-xl font-black mb-4">پوشش کامل رزیدنتی</h3>
+                    <p class="text-[var(--text-muted)] text-sm leading-relaxed">تمام رفرنس‌های اصلی اعلامی وزارتخانه در جیب شما.</p>
                 </div>
-
-                <!-- Box 2 -->
-                <div class="bento-box glass-card p-10 rounded-[2.5rem] flex flex-col items-start justify-between relative mouse-track bento-reveal group">
-                    <div class="bb-icon w-14 h-14 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center text-2xl mb-6">
+                <div class="glass-card p-10 rounded-[2.5rem] mouse-track bento-reveal group">
+                    <div class="w-14 h-14 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center text-2xl mb-6">
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
-                    <div>
-                        <h3 class="text-xl font-black mb-4">ردیاب آنالیتیک</h3>
-                        <p class="text-[var(--text-muted)] text-sm leading-relaxed">نمایش نقاط ضعف به صورت گراف؛ اینکه قلب را خوب می‌فهمید ولی غدد در کماست!</p>
-                    </div>
+                    <h3 class="text-xl font-black mb-4">ردیاب آنالیتیک</h3>
+                    <p class="text-[var(--text-muted)] text-sm leading-relaxed">نمایش نقاط ضعف و قوت به صورت گراف‌های پیشرفته.</p>
                 </div>
-
-                <!-- Box 3 -->
-                <div class="bento-box glass-card p-10 rounded-[2.5rem] flex flex-col items-start justify-between relative mouse-track bento-reveal group">
-                    <div class="bb-icon w-14 h-14 bg-amber-500/10 text-amber-500 rounded-2xl flex items-center justify-center text-2xl mb-6">
-                        <i class="fa-solid fa-cloud-moon"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-black mb-4">بدون خیرگی</h3>
-                        <p class="text-[var(--text-muted)] text-sm leading-relaxed">تم دیفالت بر اساس ساعت شیفت؛ کدگذاری با کنتراست عالی مناسب محیط بیمارستان.</p>
-                    </div>
-                </div>
-
-                <!-- Box 4 (Large) -->
-                <div class="bento-box md:col-span-2 md:row-span-2 glass-card p-10 rounded-[2.5rem] flex flex-col justify-between overflow-hidden relative mouse-track bento-reveal group">
-                    <div class="relative z-10">
-                        <div class="bb-icon w-14 h-14 bg-[var(--primary)]/10 text-[var(--primary)] rounded-2xl flex items-center justify-center text-2xl mb-6">
-                            <i class="fa-solid fa-database"></i>
-                        </div>
-                        <h3 class="text-3xl font-black mb-6 gradient-text">بانک ژرف، تکرار منظم</h3>
-                        <p class="text-[var(--text-muted)] leading-relaxed">ساخته شده از استخوان و پوست رفرنس های اعلامی برای برد کشوری، تا اطمینان ۱۰۰ درصد را محیا کنیم.</p>
-
-                        <!-- Stats Grid -->
-                        <div class="stats-wrap grid grid-cols-3 gap-4 mt-12">
-                            <div class="stat flex flex-col gap-1">
-                                <div class="text-3xl font-black font-sans flex items-baseline gap-1">
-                                    <span class="stat-num" data-val="15">0</span><span class="text-lg text-[var(--primary)]">K</span>
-                                </div>
-                                <span class="text-[10px] md:text-xs font-bold text-[var(--text-muted)]">فلش‌کارت</span>
-                            </div>
-                            <div class="stat flex flex-col gap-1">
-                                <div class="text-3xl font-black font-sans flex items-baseline gap-1">
-                                    <span class="text-lg text-[var(--primary)]">+</span><span class="stat-num" data-val="40">0</span>
-                                </div>
-                                <span class="text-[10px] md:text-xs font-bold text-[var(--text-muted)]">سورس رفرنس</span>
-                            </div>
-                            <div class="stat flex flex-col gap-1">
-                                <div class="text-3xl font-black font-sans flex items-baseline gap-1">
-                                    <span class="text-lg text-[var(--primary)]">%</span><span class="stat-num" data-val="98">0</span>
-                                </div>
-                                <span class="text-[10px] md:text-xs font-bold text-[var(--text-muted)]">تطابق سوالات</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Mini Cards Visual -->
-                    <div class="bb-large-visual absolute -bottom-10 left-0 right-0 h-48 flex justify-center items-end gap-4 pointer-events-none opacity-40 group-hover:opacity-100 transition-opacity duration-500">
-                        <div class="mini-c w-32 h-40 glass-card rounded-2xl translate-y-12 -rotate-12"></div>
-                        <div class="mini-c w-32 h-40 glass-card rounded-2xl translate-y-[-20px] rotate-6 border-[var(--primary)]/50 p-4 flex flex-col">
-                            <div class="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white text-[10px] mb-3">
-                                <i class="fa-solid fa-check"></i>
-                            </div>
-                            <div class="w-full h-1 bg-[var(--bg-border)] rounded-full mb-2"></div>
-                            <div class="w-2/3 h-1 bg-[var(--bg-border)] rounded-full mb-2"></div>
-                            <div class="mt-auto py-1 bg-emerald-500 text-white rounded-lg text-[8px] font-bold text-center">موردتایید</div>
-                        </div>
-                        <div class="mini-c w-32 h-40 glass-card rounded-2xl translate-y-8 rotate-12"></div>
-                    </div>
-                </div>
-
-                <!-- Box 5 -->
-                <div class="bento-box glass-card p-10 rounded-[2.5rem] flex flex-col items-start justify-between relative mouse-track bento-reveal group">
-                    <div class="bb-icon w-14 h-14 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center text-2xl mb-6">
+                <div class="glass-card p-10 rounded-[2.5rem] mouse-track bento-reveal group">
+                    <div class="w-14 h-14 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center text-2xl mb-6">
                         <i class="fa-brands fa-telegram"></i>
                     </div>
-                    <div>
-                        <h3 class="text-xl font-black mb-4">اعلان تلگرامی</h3>
-                        <p class="text-[var(--text-muted)] text-sm leading-relaxed">یادآوری هوشمند مرور فلش‌کارت‌ها و برنامه مطالعه مستقیم در تلگرام شما.</p>
-                    </div>
-                </div>
-
-                <!-- Box 6 -->
-                <div class="bento-box glass-card p-10 rounded-[2.5rem] flex flex-col items-start justify-between relative mouse-track bento-reveal group">
-                    <div class="bb-icon w-14 h-14 bg-purple-500/10 text-purple-500 rounded-2xl flex items-center justify-center text-2xl mb-6">
-                        <i class="fa-solid fa-brain"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-black mb-4">مرور هوشمند</h3>
-                        <p class="text-[var(--text-muted)] text-sm leading-relaxed">الگوریتم اختصاصی برای زمان‌بندی بهینه مرور بر اساس منحنی فراموشی.</p>
-                    </div>
+                    <h3 class="text-xl font-black mb-4">اعلان تلگرامی</h3>
+                    <p class="text-[var(--text-muted)] text-sm leading-relaxed">یادآوری هوشمند مرور فلش‌کارت‌ها مستقیم در تلگرام.</p>
                 </div>
             </div>
         </section>
@@ -407,590 +288,209 @@
         <section id="courses" class="py-20 md:py-32 max-w-7xl mx-auto px-6">
             <div class="text-center mb-16 md:mb-24">
                 <h2 class="text-3xl md:text-5xl font-black mb-6">درسنامه‌های محبوب</h2>
-                <p class="text-[var(--text-muted)] text-lg">جدیدترین و پرطرفدارترین درسنامه‌های پلتفرم</p>
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Course Card 1 -->
-                <div class="glass-card rounded-[2.5rem] overflow-hidden group hover:translate-y-[-10px] transition-all duration-500">
-                    <div class="h-52 bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center relative overflow-hidden">
-                        <i class="fa-solid fa-heart-pulse text-7xl text-white/20 group-hover:scale-125 transition-transform duration-700"></i>
-                        <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+                <div class="glass-card rounded-[2.5rem] overflow-hidden group">
+                    <div class="h-52 bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center">
+                        <i class="fa-solid fa-heart-pulse text-7xl text-white/20"></i>
                     </div>
                     <div class="p-8">
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="px-3 py-1 bg-[var(--primary)]/10 text-[var(--primary)] rounded-full text-[10px] font-bold">فیزیولوژی</span>
-                            <span class="px-3 py-1 bg-[var(--bg-border)] text-[var(--text-muted)] rounded-full text-[10px] font-bold">۴۵ درس</span>
-                        </div>
-                        <h3 class="text-xl font-black mb-3">فیزیولوژی قلب و عروق</h3>
-                        <p class="text-[var(--text-muted)] text-sm leading-loose mb-6">شامل الکتروفیزیولوژی، سیکل قلبی، فشار خون و رگ‌های اصلی بدن.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <div class="flex -space-x-2">
-                                    <div class="w-8 h-8 rounded-full border-2 border-[var(--bg-surface-solid)] bg-teal-200"></div>
-                                    <div class="w-8 h-8 rounded-full border-2 border-[var(--bg-surface-solid)] bg-teal-400"></div>
-                                    <div class="w-8 h-8 rounded-full border-2 border-[var(--bg-surface-solid)] bg-teal-600"></div>
-                                </div>
-                                <span class="text-[10px] text-[var(--text-muted)]">+۲۳۴ دانشجو</span>
-                            </div>
-                            <button class="w-10 h-10 rounded-full border border-[var(--bg-border)] flex items-center justify-center text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white transition-all">
-                                <i class="fa-solid fa-arrow-left"></i>
-                            </button>
-                        </div>
+                        <h3 class="text-xl font-black mb-3">فیزیولوژی قلب</h3>
+                        <p class="text-[var(--text-muted)] text-sm mb-6">جامع‌ترین درسنامه الکتروفیزیولوژی و سیکل قلبی.</p>
+                        <button class="w-full py-3 rounded-xl border border-[var(--bg-border)] font-bold text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white transition-all">مشاهده درس</button>
                     </div>
                 </div>
-
-                <!-- Course Card 2 -->
-                <div class="glass-card rounded-[2.5rem] overflow-hidden group hover:translate-y-[-10px] transition-all duration-500">
-                    <div class="h-52 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center relative overflow-hidden">
-                        <i class="fa-solid fa-brain text-7xl text-white/20 group-hover:scale-125 transition-transform duration-700"></i>
+                <div class="glass-card rounded-[2.5rem] overflow-hidden group">
+                    <div class="h-52 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                        <i class="fa-solid fa-brain text-7xl text-white/20"></i>
                     </div>
                     <div class="p-8">
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="px-3 py-1 bg-blue-500/10 text-blue-500 rounded-full text-[10px] font-bold">نوروآناتومی</span>
-                            <span class="px-3 py-1 bg-[var(--bg-border)] text-[var(--text-muted)] rounded-full text-[10px] font-bold">۶۰ درس</span>
-                        </div>
-                        <h3 class="text-xl font-black mb-3">آناتومی سیستم عصبی</h3>
-                        <p class="text-[var(--text-muted)] text-sm leading-loose mb-6">مغز، نخاع، اعصاب محیطی و تمام مسیرهای حسی و حرکتی بدن.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <div class="flex -space-x-2">
-                                    <div class="w-8 h-8 rounded-full border-2 border-[var(--bg-surface-solid)] bg-blue-200"></div>
-                                    <div class="w-8 h-8 rounded-full border-2 border-[var(--bg-surface-solid)] bg-blue-400"></div>
-                                    <div class="w-8 h-8 rounded-full border-2 border-[var(--bg-surface-solid)] bg-blue-600"></div>
-                                </div>
-                                <span class="text-[10px] text-[var(--text-muted)]">+۱۸۷ دانشجو</span>
-                            </div>
-                            <button class="w-10 h-10 rounded-full border border-[var(--bg-border)] flex items-center justify-center text-blue-500 hover:bg-blue-500 hover:text-white transition-all">
-                                <i class="fa-solid fa-arrow-left"></i>
-                            </button>
-                        </div>
+                        <h3 class="text-xl font-black mb-3">نوروآناتومی</h3>
+                        <p class="text-[var(--text-muted)] text-sm mb-6">بررسی ساختار مغز، نخاع و مسیرهای عصبی.</p>
+                        <button class="w-full py-3 rounded-xl border border-[var(--bg-border)] font-bold text-blue-500 hover:bg-blue-500 hover:text-white transition-all">مشاهده درس</button>
                     </div>
                 </div>
-
-                <!-- Course Card 3 -->
-                <div class="glass-card rounded-[2.5rem] overflow-hidden group hover:translate-y-[-10px] transition-all duration-500">
-                    <div class="h-52 bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center relative overflow-hidden">
-                        <i class="fa-solid fa-flask-vial text-7xl text-white/20 group-hover:scale-125 transition-transform duration-700"></i>
+                <div class="glass-card rounded-[2.5rem] overflow-hidden group">
+                    <div class="h-52 bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center">
+                        <i class="fa-solid fa-flask-vial text-7xl text-white/20"></i>
                     </div>
                     <div class="p-8">
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="px-3 py-1 bg-purple-500/10 text-purple-500 rounded-full text-[10px] font-bold">بیوشیمی</span>
-                            <span class="px-3 py-1 bg-[var(--bg-border)] text-[var(--text-muted)] rounded-full text-[10px] font-bold">۵۵ درس</span>
-                        </div>
-                        <h3 class="text-xl font-black mb-3">متابولیسم و آنزیم‌ها</h3>
-                        <p class="text-[var(--text-muted)] text-sm leading-loose mb-6">گلیکولیز، چرخه کربس، فسفریلاسیون اکسیداتیو و بیوسنتزها.</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <div class="flex -space-x-2">
-                                    <div class="w-8 h-8 rounded-full border-2 border-[var(--bg-surface-solid)] bg-purple-200"></div>
-                                    <div class="w-8 h-8 rounded-full border-2 border-[var(--bg-surface-solid)] bg-purple-400"></div>
-                                    <div class="w-8 h-8 rounded-full border-2 border-[var(--bg-surface-solid)] bg-purple-600"></div>
-                                </div>
-                                <span class="text-[10px] text-[var(--text-muted)]">+۳۱۲ دانشجو</span>
-                            </div>
-                            <button class="w-10 h-10 rounded-full border border-[var(--bg-border)] flex items-center justify-center text-purple-500 hover:bg-purple-500 hover:text-white transition-all">
-                                <i class="fa-solid fa-arrow-left"></i>
-                            </button>
-                        </div>
+                        <h3 class="text-xl font-black mb-3">بیوشیمی متابولیسم</h3>
+                        <p class="text-[var(--text-muted)] text-sm mb-6">گلیکولیز و چرخه کربس به زبان ساده.</p>
+                        <button class="w-full py-3 rounded-xl border border-[var(--bg-border)] font-bold text-purple-500 hover:bg-purple-500 hover:text-white transition-all">مشاهده درس</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Flashcard Demo Section -->
+        <!-- Flashcards -->
         <section id="flashcards" class="py-20 md:py-32 max-w-7xl mx-auto px-6">
-            <div class="glass-card rounded-[3rem] p-8 md:p-16 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent opacity-50"></div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <div>
-                        <h2 class="text-3xl md:text-5xl font-black mb-8 leading-tight">سیستم فلش‌کارت <span class="gradient-text">هوشمند</span></h2>
-                        <p class="text-[var(--text-muted)] text-lg leading-loose mb-10">
-                            با استفاده از الگوریتم تکرار فاصله‌دار (Spaced Repetition)، مطالب را در بهترین زمان ممکن مرور کنید. سیستم ما بر اساس عملکرد شما، زمان مرور هر کارت را بهینه‌سازی می‌کند.
-                        </p>
-
-                        <div class="space-y-6">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-2xl bg-[var(--primary)]/10 text-[var(--primary)] flex items-center justify-center text-xl">
-                                    <i class="fa-solid fa-bell"></i>
-                                </div>
-                                <span class="font-bold">یادآوری خودکار در تلگرام</span>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-2xl bg-[var(--primary)]/10 text-[var(--primary)] flex items-center justify-center text-xl">
-                                    <i class="fa-solid fa-chart-pie"></i>
-                                </div>
-                                <span class="font-bold">آمار دقیق میزان یادگیری</span>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-2xl bg-[var(--primary)]/10 text-[var(--primary)] flex items-center justify-center text-xl">
-                                    <i class="fa-solid fa-layer-group"></i>
-                                </div>
-                                <span class="font-bold">امکان ساخت کارت اختصاصی</span>
-                            </div>
-                        </div>
+            <div class="glass-card rounded-[3rem] p-8 md:p-16 flex flex-col md:flex-row items-center gap-16">
+                <div class="flex-1">
+                    <h2 class="text-3xl md:text-5xl font-black mb-8 leading-tight">فلش‌کارت <span class="gradient-text">هوشمند</span></h2>
+                    <p class="text-[var(--text-muted)] text-lg mb-10">الگوریتم تکرار فاصله‌دار برای یادگیری پایدار.</p>
+                    <div class="space-y-4 font-bold">
+                        <p><i class="fa-solid fa-check text-[var(--primary)] ml-2"></i> یادآوری خودکار در تلگرام</p>
+                        <p><i class="fa-solid fa-check text-[var(--primary)] ml-2"></i> آمار دقیق پیشرفت</p>
                     </div>
-
-                    <!-- Flashcard 3D -->
-                    <div class="relative perspective-1000 h-[350px] md:h-[400px]">
-                        <div id="flashcard" onclick="flipCard()" class="w-full h-full relative transition-transform duration-700 cursor-pointer" style="transform-style: preserve-3d;">
-                            <!-- Front -->
-                            <div class="absolute inset-0 glass-card rounded-[2.5rem] p-10 flex flex-col items-center justify-center backface-hidden border-2 border-[var(--primary)]/20 shadow-2xl">
-                                <span class="px-4 py-1 bg-[var(--primary)]/10 text-[var(--primary)] rounded-full text-xs font-bold mb-6">فیزیولوژی قلب</span>
-                                <p class="text-xl md:text-2xl font-black text-center leading-relaxed">فاز دپولاریزاسیون سریع در پتانسیل عمل قلبی توسط کدام کانال یونی ایجاد می‌شود؟</p>
-                                <div class="mt-8 flex items-center gap-2 text-[var(--text-muted)] animate-bounce">
-                                    <span class="text-xs font-bold">برای مشاهده پاسخ کلیک کنید</span>
-                                    <i class="fa-solid fa-rotate"></i>
-                                </div>
-                            </div>
-
-                            <!-- Back -->
-                            <div class="absolute inset-0 glass-card rounded-[2.5rem] p-10 flex flex-col items-center justify-center backface-hidden border-2 border-emerald-500/20 shadow-2xl" style="transform: rotateY(180deg);">
-                                <span class="px-4 py-1 bg-emerald-500/10 text-emerald-500 rounded-full text-xs font-bold mb-4">پاسخ صحیح</span>
-                                <p class="text-xl md:text-2xl font-black text-emerald-500 text-center mb-6">کانال‌های سدیمی سریع (Fast Na+ Channels)</p>
-                                <p class="text-[var(--text-muted)] text-center text-sm leading-loose mb-8">
-                                    این کانال‌ها با باز شدن سریع، ورود ناگهانی سدیم به سلول را ایجاد کرده و پتانسیل غشا را از -۹۰ به +۲۰ میلی‌ولت می‌رسانند.
-                                </p>
-
-                                <div class="flex flex-wrap justify-center gap-3 w-full">
-                                    <button onclick="event.stopPropagation(); rateCard('again')" class="px-4 py-2 bg-red-500/10 text-red-500 rounded-xl text-[10px] font-bold hover:bg-red-500 hover:text-white transition-all">دوباره</button>
-                                    <button onclick="event.stopPropagation(); rateCard('hard')" class="px-4 py-2 bg-orange-500/10 text-orange-500 rounded-xl text-[10px] font-bold hover:bg-orange-500 hover:text-white transition-all">سخت</button>
-                                    <button onclick="event.stopPropagation(); rateCard('good')" class="px-4 py-2 bg-teal-500/10 text-teal-500 rounded-xl text-[10px] font-bold hover:bg-teal-500 hover:text-white transition-all">خوب</button>
-                                    <button onclick="event.stopPropagation(); rateCard('easy')" class="px-4 py-2 bg-emerald-500/10 text-emerald-500 rounded-xl text-[10px] font-bold hover:bg-emerald-500 hover:text-white transition-all">آسان</button>
-                                </div>
-                            </div>
+                </div>
+                <div class="flex-1 w-full max-w-md perspective-1000 h-80">
+                    <div id="flashcard" onclick="flipCard()" class="w-full h-full relative transition-transform duration-700 cursor-pointer" style="transform-style: preserve-3d;">
+                        <div class="absolute inset-0 glass-card rounded-[2rem] p-10 flex items-center justify-center backface-hidden shadow-2xl">
+                            <p class="text-xl md:text-2xl font-black text-center">فاز دپولاریزاسیون سریع در پتانسیل عمل قلبی توسط کدام کانال است؟</p>
+                        </div>
+                        <div class="absolute inset-0 glass-card rounded-[2rem] p-10 flex items-center justify-center backface-hidden shadow-2xl" style="transform: rotateY(180deg);">
+                            <p class="text-xl md:text-2xl font-black text-emerald-500 text-center">کانال‌های سدیمی سریع</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Telegram Bot Section -->
+        <!-- Final CTA -->
         <section class="py-20 md:py-32 max-w-7xl mx-auto px-6">
-            <div class="glass-card rounded-[3rem] p-8 md:p-16 bg-gradient-to-br from-white/10 to-teal-500/5">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <!-- Telegram Chat Preview -->
-                    <div class="order-2 lg:order-1">
-                        <div class="glass-card rounded-[2.5rem] overflow-hidden max-w-sm mx-auto shadow-2xl border-2 border-blue-500/20">
-                            <div class="bg-gradient-to-r from-[#0088cc] to-[#00a0dc] p-5 flex items-center gap-4">
-                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                                    <i class="fa-brands fa-telegram text-2xl text-white"></i>
-                                </div>
-                                <div>
-                                    <div class="text-white font-black">drkhaste Bot</div>
-                                    <div class="text-white/70 text-[10px]">ربات هوشمند یادآوری</div>
-                                </div>
-                            </div>
-                            <div class="p-6 space-y-4 bg-[#e5ddd5] dark:bg-slate-900/50">
-                                <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-tr-sm p-4 shadow-sm max-w-[85%] animate-fadeInUp">
-                                    <p class="text-sm">سلام علی! 👋 وقت مرور فلش‌کارت‌هاته!</p>
-                                    <span class="text-[9px] text-gray-400 mt-2 block">۱۰:۳۰</span>
-                                </div>
-                                <div class="bg-white dark:bg-slate-800 rounded-2xl rounded-tr-sm p-4 shadow-sm max-w-[85%] animate-fadeInUp stagger-1">
-                                    <p class="text-sm">📚 <strong>۱۲ کارت</strong> از فیزیولوژی قلب</p>
-                                    <p class="text-sm">📚 <strong>۸ کارت</strong> از بیوشیمی</p>
-                                    <span class="text-[9px] text-gray-400 mt-2 block">۱۰:۳۰</span>
-                                </div>
-                                <div class="flex gap-2 animate-fadeInUp stagger-2">
-                                    <button class="flex-1 bg-teal-500 text-white py-3 rounded-xl text-xs font-bold shadow-lg">شروع مرور</button>
-                                    <button class="flex-1 bg-white dark:bg-slate-700 py-3 rounded-xl text-xs font-bold border border-gray-200 dark:border-slate-600">بعداً</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="order-1 lg:order-2">
-                        <h2 class="text-3xl md:text-5xl font-black mb-8">هرگز یک مرور را <br><span class="gradient-text">از دست نده!</span></h2>
-                        <p class="text-[var(--text-muted)] text-lg leading-loose mb-10">
-                            ربات تلگرام ما در بهترین زمان‌ها یادآوری می‌کند که فلش‌کارت‌هایت را مرور کنی. دیگر نیازی نیست خودت به یاد داشته باشی، ما حواسمان به حافظه‌ی تو هست!
-                        </p>
-                        <div class="space-y-6 mb-10">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-[var(--primary)]">
-                                    <i class="fa-solid fa-clock-rotate-left"></i>
-                                </div>
-                                <span class="font-bold">یادآوری در ساعت‌های دلخواه شما</span>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-[var(--primary)]">
-                                    <i class="fa-solid fa-calendar-check"></i>
-                                </div>
-                                <span class="font-bold">گزارش روزانه و هفتگی پیشرفت</span>
-                            </div>
-                        </div>
-                        <button onclick="openLoginModal()" class="w-full sm:w-auto px-10 py-4 rounded-2xl bg-[#0088cc] text-white font-bold text-lg shadow-xl shadow-blue-500/20 hover:scale-105 transition-all flex items-center justify-center gap-3">
-                            <i class="fa-brands fa-telegram text-2xl"></i>
-                            <span>اتصال به ربات تلگرام</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Final CTA Section -->
-        <section class="py-20 md:py-32 max-w-7xl mx-auto px-6">
-            <div id="finalCta" class="cta-wrap rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden shadow-2xl">
+            <div class="bg-gradient-to-br from-teal-600 to-teal-800 rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden shadow-2xl">
                 <div class="relative z-10">
-                    <h2 class="text-4xl md:text-6xl font-black text-white mb-8">درب اصلی رزیدنتی <br>از اینجا باز می‌شود!</h2>
-                    <p class="text-white/80 text-xl mb-12 max-w-2xl mx-auto">ارائه دو اکوسیستم تستی رایگان برای راستی آزمایی هوش الگوریتم. همین الان امتحان کنید.</p>
-                    <button onclick="openLoginModal()" class="px-12 py-5 rounded-[2rem] bg-white text-[var(--primary)] font-black text-xl shadow-2xl hover:scale-110 hover:rotate-2 transition-all inline-flex items-center gap-4">
-                        <span>اکانت خود را فعال کنید</span>
-                        <i class="fa-solid fa-chevron-left"></i>
+                    <h2 class="text-4xl md:text-6xl font-black text-white mb-8">همین الان شروع کن!</h2>
+                    <p class="text-white/80 text-xl mb-12">با ورود از طریق تلگرام، به تمام محتوا دسترسی پیدا کن.</p>
+                    <button onclick="openLoginModal()" class="px-12 py-5 rounded-[2rem] bg-white text-[var(--primary)] font-black text-xl hover:scale-105 transition-all shadow-2xl">
+                        ورود با تلگرام - رایگان
                     </button>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="py-12 md:py-20 max-w-7xl mx-auto px-6">
-        <div class="glass-card rounded-[3rem] p-12 md:p-16">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
-                <div class="md:col-span-2">
-                    <div class="flex items-center gap-3 mb-8">
-                        <i class="fa-solid fa-notes-medical text-3xl text-[var(--primary)]"></i>
-                        <span class="text-2xl font-black" id="footer-brand">drkhaste</span>
-                    </div>
-                    <p class="text-[var(--text-muted)] leading-loose max-w-sm mb-8">
-                        پلتفرم هوشمند آموزش پزشکی با درسنامه‌های طبقه‌بندی شده، فلش‌کارت و سیستم مرور اختصاصی بر اساس منحنی فراموشی.
-                    </p>
-                    <div class="flex gap-4">
-                        <a href="#" class="w-12 h-12 rounded-2xl glass-card flex items-center justify-center text-xl text-[var(--primary)] hover:scale-110 transition-transform">
-                            <i class="fa-brands fa-telegram"></i>
-                        </a>
-                        <a href="#" class="w-12 h-12 rounded-2xl glass-card flex items-center justify-center text-xl text-[var(--primary)] hover:scale-110 transition-transform">
-                            <i class="fa-brands fa-instagram"></i>
-                        </a>
-                        <a href="#" class="w-12 h-12 rounded-2xl glass-card flex items-center justify-center text-xl text-[var(--primary)] hover:scale-110 transition-transform">
-                            <i class="fa-brands fa-linkedin"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div>
-                    <h4 class="font-black text-lg mb-6">دسترسی سریع</h4>
-                    <ul class="space-y-4">
-                        <li><a href="#how" class="text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors">متدولوژی</a></li>
-                        <li><a href="#features" class="text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors">امکانات</a></li>
-                        <li><a href="#courses" class="text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors">درسنامه‌ها</a></li>
-                        <li><a href="#flashcards" class="text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors">فلش‌کارت</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="font-black text-lg mb-6">پشتیبانی</h4>
-                    <ul class="space-y-4">
-                        <li><a href="#" class="text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors">سوالات متداول</a></li>
-                        <li><a href="#" class="text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors">تماس با ما</a></li>
-                        <li><a href="#" class="text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors">قوانین و مقررات</a></li>
-                        <li><a href="#" class="text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors">حریم خصوصی</a></li>
-                    </ul>
-                </div>
+    <footer class="py-12 max-w-7xl mx-auto px-6 text-center">
+        <div class="glass-card p-10 rounded-[3rem]">
+            <div class="flex items-center justify-center gap-3 mb-6">
+                <i class="fa-solid fa-notes-medical text-2xl text-[var(--primary)]"></i>
+                <span class="text-xl font-black" id="footer-brand">drkhaste</span>
             </div>
-
-            <div class="mt-16 pt-8 border-t border-[var(--bg-border)] text-center">
-                <p class="text-[var(--text-muted)] text-sm font-bold">
-                    دیزاین و برنامه‌نویسی مبتنی بر عشق و اعصاب‌پولادین | © ۱۴۰۳ drkhaste
-                </p>
-            </div>
+            <p class="text-[var(--text-muted)] text-sm font-bold">دیزاین و برنامه‌نویسی مبتنی بر عشق و اعصاب‌پولادین | © ۱۴۰۳ drkhaste</p>
         </div>
     </footer>
 
-    <!-- Login Modal -->
+    <!-- Modals -->
     <div id="loginModal" class="fixed inset-0 z-[2000] hidden items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-md" onclick="closeLoginModal()"></div>
-        <div class="glass-card rounded-[2.5rem] p-10 max-w-md w-full relative z-10 animate-fadeInUp">
-            <button onclick="closeLoginModal()" class="absolute top-6 left-6 text-[var(--text-muted)] hover:text-[var(--text-main)]">
-                <i class="fa-solid fa-xmark text-2xl"></i>
-            </button>
-            <div class="text-center mb-10">
-                <div class="w-20 h-20 bg-[var(--primary)]/10 text-[var(--primary)] rounded-[1.5rem] flex items-center justify-center mx-auto mb-6 text-3xl">
-                    <i class="fa-brands fa-telegram"></i>
-                </div>
-                <h3 class="text-2xl font-black mb-2">ورود به drkhaste</h3>
-                <p class="text-[var(--text-muted)]">با تلگرام وارد شوید و یادگیری را شروع کنید</p>
-            </div>
-            <div class="space-y-6">
-                <div>
-                    <label for="phone" class="block text-sm font-bold mb-3 mr-1">شماره موبایل</label>
-                    <input type="tel" id="phone" placeholder="۰۹۱۲۳۴۵۶۷۸۹" dir="ltr" class="glass-input w-full px-6 py-4 rounded-2xl outline-none text-center text-xl font-bold tracking-widest focus:border-[var(--primary)] transition-all">
-                </div>
-                <button onclick="sendCode()" id="sendCodeBtn" class="w-full py-4 rounded-2xl bg-[#0088cc] text-white font-black text-lg shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3">
-                    <i class="fa-solid fa-paper-plane"></i>
-                    <span>ارسال کد تأیید</span>
-                </button>
-                <p class="text-center text-[10px] text-[var(--text-muted)] font-bold">
-                    با ورود، <a href="#" class="text-[var(--primary)] underline underline-offset-4">قوانین و مقررات</a> را می‌پذیرید
-                </p>
-            </div>
+        <div class="glass-card rounded-[2.5rem] p-10 max-w-md w-full relative z-10">
+            <h3 class="text-2xl font-black mb-6 text-center">ورود به drkhaste</h3>
+            <input type="tel" id="phone" placeholder="۰۹۱۲۳۴۵۶۷۸۹" dir="ltr" class="glass-input w-full px-6 py-4 rounded-2xl text-center mb-6 outline-none font-bold text-xl tracking-widest focus:border-[var(--primary)]">
+            <button onclick="sendCode()" id="sendCodeBtn" class="w-full py-4 rounded-2xl bg-[#0088cc] text-white font-black text-lg shadow-xl shadow-blue-500/20">ارسال کد تأیید</button>
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[3000] hidden">
-        <div class="glass-card px-8 py-4 rounded-2xl flex items-center gap-4 shadow-2xl border-2 border-[var(--primary)]/30">
-            <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center">
-                <i class="fa-solid fa-check"></i>
-            </div>
+        <div class="glass-card px-8 py-4 rounded-2xl shadow-2xl border-2 border-emerald-500/30">
             <span id="toastMessage" class="font-bold text-sm"></span>
         </div>
     </div>
 
-    <!-- Back to Top Button -->
-    <button id="backToTop" class="fixed bottom-10 right-10 w-14 h-14 rounded-2xl glass-card text-[var(--primary)] shadow-2xl flex items-center justify-center translate-y-24 opacity-0 transition-all duration-500 z-[999] hover:scale-110">
-        <i class="fa-solid fa-arrow-up text-xl"></i>
+    <button id="backToTop" class="fixed bottom-10 right-10 w-14 h-14 rounded-2xl glass-card text-[var(--primary)] shadow-2xl flex items-center justify-center translate-y-24 opacity-0 transition-all z-[999] hover:scale-110">
+        <i class="fa-solid fa-arrow-up"></i>
     </button>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Local Scripts -->
+    <script src="assets/js/gsap.min.js"></script>
+    <script src="assets/js/ScrollTrigger.min.js"></script>
 
     <script>
-        // --- 1. Theme Management ---
+        // --- Theme Management ---
         const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
         const updateIcon = () => {
-            themeIcon.className = document.body.classList.contains('dark-mode') ? "fa-solid fa-sun" : "fa-solid fa-moon";
+            themeToggle.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
         };
-
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-            updateIcon();
-        }
-
+        if (localStorage.getItem('theme') === 'dark') { document.body.classList.add('dark-mode'); updateIcon(); }
         themeToggle.addEventListener('click', () => {
             const isDark = document.body.classList.toggle('dark-mode');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
             updateIcon();
         });
 
-        // --- 2. Navigation & Scroll ---
+        // --- Scroll Logic ---
         const mainNav = document.getElementById('mainNav');
-        const scrollProgress = document.getElementById('scroll-progress');
         const backToTop = document.getElementById('backToTop');
-
+        const scrollProgress = document.getElementById('scroll-progress');
         window.addEventListener('scroll', () => {
-            // Header resize
             if (window.scrollY > 100) {
-                mainNav.style.width = window.innerWidth > 768 ? "82%" : "95%";
-                mainNav.style.padding = "8px 24px";
-                backToTop.style.opacity = "1";
-                backToTop.style.transform = "translateY(0)";
+                mainNav.style.width = "82%"; mainNav.style.padding = "8px 24px";
+                backToTop.style.opacity = "1"; backToTop.style.transform = "translateY(0)";
             } else {
-                mainNav.style.width = "90%";
-                mainNav.style.padding = "12px 24px";
-                backToTop.style.opacity = "0";
-                backToTop.style.transform = "translateY(100px)";
+                mainNav.style.width = "90%"; mainNav.style.padding = "12px 24px";
+                backToTop.style.opacity = "0"; backToTop.style.transform = "translateY(100px)";
             }
-
-            // Scroll progress
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            scrollProgress.style.width = scrolled + "%";
+            scrollProgress.style.width = (winScroll / height) * 100 + "%";
         });
-
-        backToTop.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
         function toggleMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
-            menu.classList.toggle('flex');
-            document.body.style.overflow = menu.classList.contains('hidden') ? 'auto' : 'hidden';
+            const m = document.getElementById('mobileMenu');
+            m.classList.toggle('hidden'); m.classList.toggle('flex');
+            document.body.style.overflow = m.classList.contains('hidden') ? 'auto' : 'hidden';
         }
-
         document.getElementById('menuBtn').addEventListener('click', toggleMenu);
 
-        // --- 3. Modal & Interactive Logic ---
+        // --- Interactive ---
         let isFlipped = false;
-
         function flipCard() {
             const card = document.getElementById('flashcard');
             isFlipped = !isFlipped;
             card.style.transform = isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
         }
-
-        function rateCard(rating) {
-            const ratings = {
-                'again': 'دوباره',
-                'hard': 'سخت',
-                'good': 'خوب',
-                'easy': 'آسان'
-            };
-            showToast(`کارت با موفقیت در لیست "${ratings[rating]}" قرار گرفت.`);
-            setTimeout(() => { if (isFlipped) flipCard(); }, 600);
+        function openLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); document.getElementById('loginModal').classList.add('flex'); }
+        function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
+        function showToast(m) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = m;
+            t.classList.remove('hidden'); setTimeout(() => t.classList.add('hidden'), 3000);
         }
+        function sendCode() { showToast('کد تأیید به تلگرام ارسال شد'); }
 
-        function openLoginModal() {
-            const modal = document.getElementById('loginModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeLoginModal() {
-            const modal = document.getElementById('loginModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.style.overflow = 'auto';
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
-            toastMessage.textContent = message;
-            toast.classList.remove('hidden');
-            setTimeout(() => { toast.classList.add('hidden'); }, 3000);
-        }
-
-        function sendCode() {
-            const phone = document.getElementById('phone').value;
-            if (!phone || phone.length < 10) {
-                showToast('لطفاً شماره موبایل معتبر وارد کنید');
-                return;
-            }
-            const btn = document.getElementById('sendCodeBtn');
-            const originalContent = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> در حال ارسال...';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                showToast('کد تأیید به تلگرام شما ارسال شد');
-                btn.innerHTML = originalContent;
-                btn.disabled = false;
-            }, 2000);
-        }
-
-        // --- 4. GSAP Animations ---
+        // --- GSAP Animations ---
         document.addEventListener('DOMContentLoaded', () => {
             gsap.registerPlugin(ScrollTrigger);
+            gsap.from(".gsap-hero", { y: 100, opacity: 0, duration: 1.2, ease: "power4.out" });
+            gsap.from(".gsap-hero-right", { x: 100, opacity: 0, scale: 0.8, duration: 1.5, ease: "back.out(1.2)" });
 
-            // Hero Entrance
-            gsap.from(".gsap-hero h1", { y: 100, opacity: 0, duration: 1.2, ease: "power4.out" });
-            gsap.from(".gsap-hero p", { y: 50, opacity: 0, duration: 1.2, ease: "power3.out", delay: 0.3 });
-            gsap.from(".gsap-hero button", { y: 30, opacity: 0, duration: 0.8, stagger: 0.2, delay: 0.6 });
-            gsap.from(".gsap-hero-right", { x: 100, opacity: 0, scale: 0.8, duration: 1.5, ease: "back.out(1.2)", delay: 0.4 });
-
-            // Anim Card Floating
-            gsap.to("#animCard", {
-                y: -20,
-                rotationX: 5,
-                rotationY: -5,
-                repeat: -1,
-                yoyo: true,
-                duration: 4,
-                ease: "sine.inOut"
-            });
-
-            // Magic Text Reveal
             const textEl = document.getElementById("myTextTarget");
             const text = textEl.innerText;
-            textEl.innerHTML = text.split(" ").map(word => `<span class="inline-block opacity-10 translate-y-4 rotate-12 transition-all duration-500">${word} </span>`).join("");
-
+            textEl.innerHTML = text.split(" ").map(w => `<span class="inline-block opacity-10 transition-opacity duration-300">${w} </span>`).join("");
             gsap.to("#myTextTarget span", {
-                opacity: 1,
-                y: 0,
-                rotate: 0,
-                stagger: 0.1,
-                scrollTrigger: {
-                    trigger: "#magicSection",
-                    start: "top 80%",
-                    end: "bottom 20%",
-                    scrub: true
-                }
+                opacity: 1, stagger: 0.1,
+                scrollTrigger: { trigger: "#magicSection", start: "top 80%", end: "bottom 20%", scrub: true }
             });
 
-            // Timeline Progress
             gsap.to("#timeLineFill", {
-                height: "100%",
-                scrollTrigger: {
-                    trigger: "#timelineContainer",
-                    start: "top center",
-                    end: "bottom center",
-                    scrub: true
-                }
+                height: "100%", scrollTrigger: { trigger: "#timelineContainer", start: "top center", end: "bottom center", scrub: true }
             });
 
-            // Timeline Dots
-            const steps = gsap.utils.toArray('.step-elem');
-            steps.forEach(step => {
-                const dot = step.querySelector('.tl-dot');
-                ScrollTrigger.create({
-                    trigger: step,
-                    start: "top center+=50",
-                    onEnter: () => dot.classList.add('border-[var(--primary)]', 'scale-125', 'shadow-[0_0_15px_var(--primary-glow)]'),
-                    onLeaveBack: () => dot.classList.remove('border-[var(--primary)]', 'scale-125', 'shadow-[0_0_15px_var(--primary-glow)]')
-                });
-            });
-
-            // Bento Reveal
             gsap.from(".bento-reveal", {
-                y: 100,
-                opacity: 0,
-                scale: 0.9,
-                duration: 1,
-                stagger: 0.15,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: ".bento-grid",
-                    start: "top 85%"
-                }
+                y: 50, opacity: 0, stagger: 0.2, scrollTrigger: { trigger: "#features", start: "top 85%" }
             });
 
-            // Stats Counter
-            const numbers = document.querySelectorAll(".stat-num");
-            numbers.forEach(numObj => {
-                const target = parseInt(numObj.getAttribute("data-val"));
-                let count = { val: 0 };
-                gsap.to(count, {
-                    val: target,
-                    duration: 3,
-                    scrollTrigger: {
-                        trigger: numObj,
-                        start: "top 90%"
-                    },
-                    onUpdate: () => numObj.innerText = Math.floor(count.val)
-                });
-            });
-
-            // Spotlight Effect
             document.querySelectorAll('.mouse-track').forEach(box => {
                 box.addEventListener('mousemove', e => {
-                    const rect = box.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    box.style.background = `radial-gradient(800px circle at ${x}px ${y}px, var(--primary-glow), transparent 40%), var(--card-glass)`;
+                    const r = box.getBoundingClientRect();
+                    box.style.background = `radial-gradient(600px circle at ${e.clientX - r.left}px ${e.clientY - r.top}px, var(--primary-glow), transparent 40%), var(--card-glass)`;
                 });
-                box.addEventListener('mouseleave', () => {
-                    box.style.background = `var(--card-glass)`;
-                });
+                box.addEventListener('mouseleave', () => box.style.background = `var(--card-glass)`);
             });
         });
 
-        // --- 5. Element SDK Integration ---
-        const defaultConfig = {
-            brand_name: 'drkhaste',
-            hero_title: 'یادگیری طبّی، بدون فـرامـوشـی فـرا رسیده است.',
-            primary_color: '#0f766e'
-        };
-
-        async function onConfigChange(config) {
-            document.getElementById('nav-brand').textContent = config.brand_name || defaultConfig.brand_name;
-            document.getElementById('footer-brand').textContent = config.brand_name || defaultConfig.brand_name;
-            if (config.primary_color) {
-                document.documentElement.style.setProperty('--primary', config.primary_color);
-            }
-        }
-
+        // --- SDK Integration ---
+        const defaultConfig = { brand_name: 'drkhaste' };
         if (window.elementSdk) {
             window.elementSdk.init({
                 defaultConfig,
-                onConfigChange,
-                mapToCapabilities: (config) => ({ recolorables: [], borderables: [] }),
-                mapToEditPanelValues: (config) => new Map([['brand_name', config.brand_name]])
+                onConfigChange: (c) => {
+                    document.getElementById('nav-brand').textContent = c.brand_name || defaultConfig.brand_name;
+                    document.getElementById('footer-brand').textContent = c.brand_name || defaultConfig.brand_name;
+                },
+                mapToCapabilities: () => ({ recolorables: [], borderables: [] }),
+                mapToEditPanelValues: (c) => new Map([['brand_name', c.brand_name]])
             });
         }
     </script>
