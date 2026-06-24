@@ -4,746 +4,1196 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>drkhaste | پلتفرم آموزش پزشکی</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="/_sdk/element_sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <style>
-    * { font-family: 'Vazirmatn', sans-serif; }
-    
-    /* Liquid Glass Effects */
-    .glass-card {
-      background: rgba(255, 255, 255, 0.7);
+    /*
+      =========================================
+      Base & Variables
+      =========================================
+    */
+    @font-face {
+      font-family: 'Vazirmatn';
+      src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-Regular.woff2') format('woff2');
+      font-weight: 400; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Vazirmatn';
+      src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-Bold.woff2') format('woff2');
+      font-weight: 700; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Vazirmatn';
+      src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-Black.woff2') format('woff2');
+      font-weight: 900; font-display: swap;
+    }
+
+    :root {
+      --primary: #0f766e;
+      --primary-hover: #0d6e64;
+      --primary-glow: rgba(15, 118, 110, 0.4);
+      --bg-body: #ffffff;
+      --bg-surface: rgba(255, 255, 255, 0.7);
+      --bg-border: rgba(15, 118, 110, 0.15);
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --card-glass: rgba(255, 255, 255, 0.6);
+      --font-family: 'Vazirmatn', Tahoma, sans-serif;
+      --telegram: #0088cc;
+    }
+
+    body.dark-mode {
+      --primary: #2dd4bf;
+      --primary-hover: #5eead4;
+      --primary-glow: rgba(45, 212, 191, 0.3);
+      --bg-body: #020617;
+      --bg-surface: rgba(15, 23, 42, 0.7);
+      --bg-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --card-glass: rgba(30, 41, 59, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-family);
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      overflow-x: hidden;
+      line-height: 1.5;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    a { text-decoration: none; color: inherit; transition: 0.3s; }
+    button { cursor: pointer; border: none; background: none; transition: 0.3s; }
+    input { border: none; outline: none; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /*
+      =========================================
+      Ambient Light & Glass
+      =========================================
+    */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: -1;
+      opacity: 0.5;
+      pointer-events: none;
+      animation: moveOrb 20s infinite alternate ease-in-out;
+    }
+    .orb-1 { width: 400px; height: 400px; background: var(--primary); top: -150px; right: -100px; }
+    .orb-2 { width: 500px; height: 500px; background: #0ea5e9; bottom: -200px; left: -150px; animation-delay: -5s; }
+    .orb-3 { width: 300px; height: 300px; background: #10b981; top: 40%; left: 10%; animation-delay: -10s; }
+
+    @keyframes moveOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(100px, 50px) scale(1.1); }
+    }
+
+    .glass {
+      background: var(--bg-surface);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      box-shadow: 
-        0 8px 32px rgba(15, 118, 110, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9),
-        inset 0 -1px 0 rgba(15, 118, 110, 0.05);
+      border: 1px solid var(--bg-border);
     }
-    
-    .glass-nav {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid rgba(15, 118, 110, 0.1);
+
+    .glass-card {
+      background: var(--card-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--bg-border);
+      border-radius: 24px;
+      transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
-    .glass-button {
-      background: linear-gradient(135deg, rgba(15, 118, 110, 0.9) 0%, rgba(15, 118, 110, 0.7) 100%);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 
-        0 4px 24px rgba(15, 118, 110, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /*
+      =========================================
+      Typography Effects
+      =========================================
+    */
+    .stroke-text {
+      -webkit-text-stroke: 1px var(--primary);
+      color: transparent;
+      text-shadow: 0 0 20px var(--primary-glow);
     }
-    
-    .glass-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 
-        0 8px 32px rgba(15, 118, 110, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    }
-    
-    .glass-input {
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(15, 118, 110, 0.15);
-      transition: all 0.3s ease;
-    }
-    
-    .glass-input:focus {
-      background: rgba(255, 255, 255, 0.8);
-      border-color: rgba(15, 118, 110, 0.4);
-      box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.1);
-    }
-    
-    /* Floating Orbs Animation */
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.5;
-      animation: float 20s ease-in-out infinite;
-    }
-    
-    .orb-1 {
-      width: 400px;
-      height: 400px;
-      background: linear-gradient(135deg, #0F766E 0%, #14b8a6 100%);
-      top: -100px;
-      right: -100px;
-      animation-delay: 0s;
-    }
-    
-    .orb-2 {
-      width: 300px;
-      height: 300px;
-      background: linear-gradient(135deg, #99f6e4 0%, #5eead4 100%);
-      bottom: 20%;
-      left: -100px;
-      animation-delay: -5s;
-    }
-    
-    .orb-3 {
-      width: 250px;
-      height: 250px;
-      background: linear-gradient(135deg, #0F766E 0%, #2dd4bf 100%);
-      top: 50%;
-      right: 10%;
-      animation-delay: -10s;
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      25% { transform: translate(30px, -30px) scale(1.05); }
-      50% { transform: translate(-20px, 20px) scale(0.95); }
-      75% { transform: translate(20px, 10px) scale(1.02); }
-    }
-    
-    /* Notification Badge Pulse */
-    .notification-pulse {
-      animation: pulse 2s ease-in-out infinite;
-    }
-    
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.8; }
-    }
-    
-    /* Card Hover Effects */
-    .feature-card {
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .feature-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 
-        0 20px 60px rgba(15, 118, 110, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 1);
-    }
-    
-    /* Smooth Scroll */
-    html { scroll-behavior: smooth; }
-    
-    /* Stats Counter Animation */
-    .stat-number {
-      background: linear-gradient(135deg, #0F766E 0%, #14b8a6 100%);
+    .gradient-text {
+      background: linear-gradient(135deg, var(--primary), #0ea5e9);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    
-    /* Icon Container */
-    .icon-glass {
-      background: linear-gradient(135deg, rgba(15, 118, 110, 0.1) 0%, rgba(15, 118, 110, 0.05) 100%);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(15, 118, 110, 0.1);
+
+    /*
+      =========================================
+      Header
+      =========================================
+    */
+    header {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 1100px;
+      height: 70px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      border-radius: 100px;
+      transition: all 0.4s ease;
+    }
+    header.scrolled {
+      top: 10px;
+      width: 95%;
+      height: 60px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     }
 
-    /* Telegram Button */
-    .telegram-btn {
-      background: linear-gradient(135deg, #0088cc 0%, #00a0dc 100%);
-      box-shadow: 0 4px 20px rgba(0, 136, 204, 0.3);
-      transition: all 0.3s ease;
-    }
-    
-    .telegram-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(0, 136, 204, 0.4);
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
     }
 
-    /* Stagger Animation */
-    .stagger-1 { animation-delay: 0.1s; }
-    .stagger-2 { animation-delay: 0.2s; }
-    .stagger-3 { animation-delay: 0.3s; }
-    .stagger-4 { animation-delay: 0.4s; }
-    
-    @keyframes fadeInUp {
-      from {
+    nav {
+      display: flex;
+      gap: 30px;
+    }
+    @media (max-width: 900px) {
+      nav {
+        position: absolute;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background: var(--bg-surface);
+        backdrop-filter: blur(30px);
+        flex-direction: column;
+        padding: 30px;
+        border-radius: 24px;
+        border: 1px solid var(--bg-border);
+        align-items: center;
         opacity: 0;
-        transform: translateY(30px);
+        pointer-events: none;
+        transform: translateY(-20px);
+        transition: 0.4s;
       }
-      to {
+      nav.active {
         opacity: 1;
+        pointer-events: auto;
         transform: translateY(0);
       }
     }
-    
-    .animate-fadeInUp {
-      animation: fadeInUp 0.6s ease-out forwards;
+
+    nav a {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+    nav a:hover { color: var(--primary); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-cta {
+      background: var(--primary);
+      color: white !important;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      box-shadow: 0 5px 15px var(--primary-glow);
+    }
+    .btn-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px var(--primary-glow);
+    }
+
+    .menu-btn {
+      display: none;
+      font-size: 1.5rem;
+    }
+    @media (max-width: 900px) {
+      .menu-btn { display: block; }
+    }
+
+    /*
+      =========================================
+      Hero
+      =========================================
+    */
+    .hero {
+      padding-top: 140px;
+      padding-bottom: 80px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      align-items: center;
+      gap: 40px;
+    }
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding-top: 120px;
+      }
+    }
+
+    .hero-content h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 900;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .hero-content p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      max-width: 600px;
+    }
+    @media (max-width: 900px) {
+      .hero-content p { margin-left: auto; margin-right: auto; }
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 16px;
+    }
+    @media (max-width: 900px) {
+      .hero-btns { justify-content: center; flex-wrap: wrap; }
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--bg-border);
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: 600;
+    }
+    .btn-secondary:hover { background: var(--bg-surface); }
+
+    /* Floating Card */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      perspective: 1000px;
+    }
+    .floating-card {
+      width: 100%;
+      max-width: 380px;
+      padding: 30px;
+      animation: float 6s infinite ease-in-out;
+      transform-style: preserve-3d;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); }
+      50% { transform: translateY(-20px) rotateX(2deg) rotateY(-2deg); }
+    }
+
+    /*
+      =========================================
+      Stats
+      =========================================
+    */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 100px;
+    }
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .stat-box {
+      padding: 24px;
+      text-align: center;
+    }
+    .stat-val {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .stat-label { color: var(--text-muted); font-size: 0.9rem; }
+
+    /*
+      =========================================
+      Magic Section
+      =========================================
+    */
+    .magic-section {
+      padding: 100px 0;
+      text-align: center;
+      border-top: 1px dashed var(--bg-border);
+      border-bottom: 1px dashed var(--bg-border);
+      margin: 80px 0;
+    }
+    .magic-text {
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      font-weight: 900;
+      max-width: 1000px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .magic-word {
+      display: inline-block;
+      opacity: 0.1;
+      transform: translateY(20px) rotateX(-45deg);
+      transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .magic-word.active {
+      opacity: 1;
+      transform: translateY(0) rotateX(0);
+    }
+    .magic-word.glow {
+      color: var(--primary);
+      text-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    /*
+      =========================================
+      Timeline Section
+      =========================================
+    */
+    .steps-section { padding: 100px 0; }
+    .section-title { text-align: center; margin-bottom: 60px; }
+    .section-title h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 16px; }
+
+    .timeline {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      padding-right: 40px;
+    }
+    .timeline-line {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--bg-border);
+      border-radius: 10px;
+    }
+    .timeline-progress {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 4px;
+      height: 0%;
+      background: var(--primary);
+      border-radius: 10px;
+      box-shadow: 0 0 20px var(--primary-glow);
+      transition: height 0.1s linear;
+    }
+    .step {
+      position: relative;
+      margin-bottom: 60px;
+    }
+    .step-dot {
+      position: absolute;
+      right: -47px;
+      top: 10px;
+      width: 18px;
+      height: 18px;
+      background: var(--bg-body);
+      border: 4px solid var(--bg-border);
+      border-radius: 50%;
+      transition: 0.4s;
+      z-index: 2;
+    }
+    .step.active .step-dot {
+      border-color: var(--primary);
+      background: var(--primary);
+      box-shadow: 0 0 15px var(--primary-glow);
+      transform: scale(1.3);
+    }
+    .step-content {
+      padding: 30px;
+    }
+    .step-content h3 { font-size: 1.5rem; margin-bottom: 12px; }
+    .step-content h3 span { color: var(--primary); margin-left: 8px; }
+
+    /*
+      =========================================
+      Bento Grid
+      =========================================
+    */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: minmax(250px, auto);
+      gap: 24px;
+      margin-bottom: 100px;
+    }
+    @media (max-width: 1024px) {
+      .bento-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .bento-grid { grid-template-columns: 1fr; }
+    }
+    .bento-box {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.4s ease;
+    }
+    .bento-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), var(--primary-glow), transparent 40%);
       opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bento-box:hover::before { opacity: 1; }
+    .bento-box > * { position: relative; z-index: 1; }
+    .bento-box.wide { grid-column: span 2; }
+    .bento-box.large { grid-column: span 2; grid-row: span 2; }
+
+    .bento-box .icon {
+      width: 60px;
+      height: 60px;
+      background: var(--bg-body);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 24px;
+    }
+    .bento-box h3 { font-size: 1.5rem; margin-bottom: 12px; font-weight: 800; }
+    .bento-box p { color: var(--text-muted); }
+
+    /*
+      =========================================
+      Flashcards
+      =========================================
+    */
+    .flashcard-section { padding: 100px 0; }
+    .flashcard-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      .flashcard-container { grid-template-columns: 1fr; }
+    }
+
+    .card-3d {
+      width: 100%;
+      aspect-ratio: 4/3;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .card-inner.flipped { transform: rotateY(180deg); }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .card-back { transform: rotateY(180deg); }
+
+    /*
+      =========================================
+      Telegram Section
+      =========================================
+    */
+    .telegram-preview {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #e5ddd5;
+      padding: 20px;
+      border-radius: 20px;
+      max-width: 350px;
+      margin: 0 auto;
+    }
+    .tg-msg {
+      background: white;
+      padding: 12px 16px;
+      border-radius: 15px;
+      border-top-right-radius: 2px;
+      font-size: 0.9rem;
+      max-width: 85%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /*
+      =========================================
+      CTA & Footer
+      =========================================
+    */
+    .cta-section { margin: 100px 0; }
+    .cta-wrap {
+      background: linear-gradient(-45deg, #0f766e, #0ea5e9, #10b981, #0f766e);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      border-radius: 40px;
+      padding: 80px 40px;
+      text-align: center;
+      color: white;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    footer {
+      padding: 80px 0 40px;
+      border-top: 1px solid var(--bg-border);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    /*
+      =========================================
+      Modals & Overlays
+      =========================================
+    */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.3s;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal {
+      width: 90%;
+      max-width: 450px;
+      padding: 40px;
+      transform: translateY(20px);
+      transition: 0.3s;
+    }
+    .modal-overlay.active .modal { transform: translateY(0); }
+
+    .input-group { margin-bottom: 20px; }
+    .input-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+    .glass-input {
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid var(--bg-border);
+      font-size: 1.1rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      z-index: 3000;
+      padding: 16px 32px;
+      border-radius: 100px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .toast.active { transform: translateX(-50%) translateY(0); }
+
+    /* Hide until JS runs or for specific states */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    [data-reveal].revealed {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
-  <style>body { box-sizing: border-box; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
- <body class="h-full bg-gradient-to-br from-white via-gray-50 to-teal-50/30 overflow-auto"><!-- Background Orbs -->
-  <div class="fixed inset-0 overflow-hidden pointer-events-none">
-   <div class="orb orb-1"></div>
-   <div class="orb orb-2"></div>
-   <div class="orb orb-3"></div>
-  </div><!-- Navigation -->
-  <nav class="glass-nav fixed top-0 left-0 right-0 z-50">
-   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16"><!-- Logo -->
-     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl icon-glass flex items-center justify-center">
-       <svg class="w-6 h-6 text-teal-700" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-       </svg>
-      </div><span id="nav-brand" class="text-xl font-bold text-teal-700">drkhaste</span>
-     </div><!-- Nav Links -->
-     <div class="hidden md:flex items-center gap-8"><a href="#features" class="text-gray-600 hover:text-teal-700 transition-colors font-medium">امکانات</a> <a href="#courses" class="text-gray-600 hover:text-teal-700 transition-colors font-medium">درسنامه‌ها</a> <a href="#flashcards" class="text-gray-600 hover:text-teal-700 transition-colors font-medium">فلش‌کارت</a> <a href="#pricing" class="text-gray-600 hover:text-teal-700 transition-colors font-medium">تعرفه‌ها</a>
-     </div><!-- CTA Buttons -->
-     <div class="flex items-center gap-3"><button class="hidden sm:flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-teal-700 transition-colors font-medium">
-       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-       </svg><span class="notification-pulse w-2 h-2 bg-red-500 rounded-full"></span> </button> <button onclick="openLoginModal()" class="telegram-btn text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2">
-       <svg class="w-5 h-5" viewbox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.154.234.17.331.015.098.034.321.019.496z" />
-       </svg> ورود با تلگرام </button>
-     </div>
+ <body>
+  <!-- Background Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Header -->
+  <header id="header" class="glass">
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+      <span>drkhaste</span>
     </div>
-   </div>
-  </nav><!-- Main Content -->
-  <main class="relative z-10 pt-24"><!-- Hero Section -->
-   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-    <div class="text-center max-w-4xl mx-auto">
-     <div class="inline-flex items-center gap-2 glass-card px-4 py-2 rounded-full mb-8 animate-fadeInUp"><span class="w-2 h-2 bg-teal-500 rounded-full notification-pulse"></span> <span class="text-sm text-gray-600">بیش از ۱۰,۰۰۰ دانشجوی پزشکی به ما اعتماد کردند</span>
-     </div>
-     <h1 id="hero-title" class="text-4xl md:text-6xl font-extrabold text-gray-900 mb-6 leading-tight animate-fadeInUp stagger-1">یادگیری پزشکی، <span class="stat-number">هوشمندتر</span> از همیشه</h1>
-     <p id="hero-subtitle" class="text-lg md:text-xl text-gray-600 mb-10 leading-relaxed animate-fadeInUp stagger-2">درسنامه‌های طبقه‌بندی شده، فلش‌کارت‌های هوشمند و سیستم مرور اختصاصی <br class="hidden md:block">
-       همراه با اعلان‌های یادآوری در تلگرام</p>
-     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fadeInUp stagger-3"><button onclick="openLoginModal()" class="glass-button text-white px-8 py-4 rounded-2xl font-semibold text-lg flex items-center gap-3 w-full sm:w-auto justify-center"> <span>شروع رایگان</span>
-       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-       </svg></button> <button class="glass-card px-8 py-4 rounded-2xl font-semibold text-gray-700 hover:bg-white/80 transition-all flex items-center gap-3 w-full sm:w-auto justify-center">
-       <svg class="w-5 h-5 text-teal-600" fill="currentColor" viewbox="0 0 24 24"><path d="M8 5v14l11-7z" />
-       </svg><span>مشاهده دمو</span> </button>
-     </div>
-    </div><!-- Stats -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20 animate-fadeInUp stagger-4">
-     <div class="glass-card rounded-2xl p-6 text-center">
-      <div class="stat-number text-3xl md:text-4xl font-bold mb-2">
-       ۲۵۰+
-      </div>
-      <div class="text-gray-600 text-sm">
-       درسنامه تخصصی
-      </div>
-     </div>
-     <div class="glass-card rounded-2xl p-6 text-center">
-      <div class="stat-number text-3xl md:text-4xl font-bold mb-2">
-       ۱۵,۰۰۰+
-      </div>
-      <div class="text-gray-600 text-sm">
-       فلش‌کارت
-      </div>
-     </div>
-     <div class="glass-card rounded-2xl p-6 text-center">
-      <div class="stat-number text-3xl md:text-4xl font-bold mb-2">
-       ۸,۰۰۰+
-      </div>
-      <div class="text-gray-600 text-sm">
-       تست طبقه‌بندی
-      </div>
-     </div>
-     <div class="glass-card rounded-2xl p-6 text-center">
-      <div class="stat-number text-3xl md:text-4xl font-bold mb-2">
-       ۹۸٪
-      </div>
-      <div class="text-gray-600 text-sm">
-       رضایت کاربران
-      </div>
-     </div>
+    <nav id="nav">
+      <a href="#how">متدولوژی</a>
+      <a href="#features">امکانات</a>
+      <a href="#flashcards">لایتنر</a>
+      <a href="#courses">درسنامه‌ها</a>
+    </nav>
+    <div class="header-actions">
+      <button onclick="toggleDarkMode()" id="themeBtn" style="font-size: 1.2rem;">🌙</button>
+      <a href="#" onclick="openLoginModal()" class="btn-cta">ورود دانشجویان</a>
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
     </div>
-   </section><!-- Features Section -->
-   <section id="features" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="text-center mb-16">
-     <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">امکانات پلتفرم</h2>
-     <p class="text-gray-600 max-w-2xl mx-auto">همه ابزارهایی که برای موفقیت در مسیر پزشکی نیاز دارید</p>
-    </div>
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Feature 1 -->
-     <div class="feature-card glass-card rounded-3xl p-8">
-      <div class="w-14 h-14 icon-glass rounded-2xl flex items-center justify-center mb-6">
-       <svg class="w-7 h-7 text-teal-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-       </svg>
-      </div>
-      <h3 class="text-xl font-bold text-gray-900 mb-3">درسنامه‌های طبقه‌بندی شده</h3>
-      <p class="text-gray-600 leading-relaxed">محتوای آموزشی ساختاریافته بر اساس سرفصل‌های دانشگاهی و منابع معتبر</p>
-     </div><!-- Feature 2 -->
-     <div class="feature-card glass-card rounded-3xl p-8">
-      <div class="w-14 h-14 icon-glass rounded-2xl flex items-center justify-center mb-6">
-       <svg class="w-7 h-7 text-teal-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-       </svg>
-      </div>
-      <h3 class="text-xl font-bold text-gray-900 mb-3">فلش‌کارت هوشمند</h3>
-      <p class="text-gray-600 leading-relaxed">سیستم تکرار فاصله‌دار (Spaced Repetition) برای به‌خاطرسپاری بهتر مطالب</p>
-     </div><!-- Feature 3 -->
-     <div class="feature-card glass-card rounded-3xl p-8">
-      <div class="w-14 h-14 icon-glass rounded-2xl flex items-center justify-center mb-6">
-       <svg class="w-7 h-7 text-teal-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-       </svg>
-      </div>
-      <h3 class="text-xl font-bold text-gray-900 mb-3">بانک تست طبقه‌بندی</h3>
-      <p class="text-gray-600 leading-relaxed">هزاران تست از آزمون‌های پیش‌کارورزی و بورد با پاسخ تشریحی</p>
-     </div><!-- Feature 4 -->
-     <div class="feature-card glass-card rounded-3xl p-8">
-      <div class="w-14 h-14 icon-glass rounded-2xl flex items-center justify-center mb-6">
-       <svg class="w-7 h-7 text-teal-700" viewbox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.154.234.17.331.015.098.034.321.019.496z" />
-       </svg>
-      </div>
-      <h3 class="text-xl font-bold text-gray-900 mb-3">اعلان تلگرامی</h3>
-      <p class="text-gray-600 leading-relaxed">یادآوری هوشمند مرور فلش‌کارت‌ها و برنامه مطالعه در تلگرام</p>
-     </div><!-- Feature 5 -->
-     <div class="feature-card glass-card rounded-3xl p-8">
-      <div class="w-14 h-14 icon-glass rounded-2xl flex items-center justify-center mb-6">
-       <svg class="w-7 h-7 text-teal-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-       </svg>
-      </div>
-      <h3 class="text-xl font-bold text-gray-900 mb-3">آنالیز پیشرفت</h3>
-      <p class="text-gray-600 leading-relaxed">نمودارها و گزارش‌های دقیق از عملکرد و میزان یادگیری شما</p>
-     </div><!-- Feature 6 -->
-     <div class="feature-card glass-card rounded-3xl p-8">
-      <div class="w-14 h-14 icon-glass rounded-2xl flex items-center justify-center mb-6">
-       <svg class="w-7 h-7 text-teal-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-       </svg>
-      </div>
-      <h3 class="text-xl font-bold text-gray-900 mb-3">مرور اختصاصی</h3>
-      <p class="text-gray-600 leading-relaxed">الگوریتم هوشمند برای زمان‌بندی بهینه مرور مطالب بر اساس منحنی فراموشی</p>
-     </div>
-    </div>
-   </section><!-- Courses Preview Section -->
-   <section id="courses" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="text-center mb-16">
-     <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">درسنامه‌های محبوب</h2>
-     <p class="text-gray-600 max-w-2xl mx-auto">جدیدترین و پرطرفدارترین درسنامه‌های پلتفرم</p>
-    </div>
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Course Card 1 -->
-     <div class="feature-card glass-card rounded-3xl overflow-hidden">
-      <div class="h-40 bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center">
-       <svg class="w-16 h-16 text-white/80" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-       </svg>
-      </div>
-      <div class="p-6">
-       <div class="flex items-center gap-2 mb-3"><span class="px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-xs font-medium">فیزیولوژی</span> <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">۴۵ درس</span>
-       </div>
-       <h3 class="text-lg font-bold text-gray-900 mb-2">فیزیولوژی قلب و عروق</h3>
-       <p class="text-gray-600 text-sm mb-4">شامل الکتروفیزیولوژی، سیکل قلبی، فشار خون و...</p>
-       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-         <div class="flex -space-x-2 space-x-reverse">
-          <div class="w-6 h-6 rounded-full bg-teal-200 border-2 border-white"></div>
-          <div class="w-6 h-6 rounded-full bg-teal-300 border-2 border-white"></div>
-          <div class="w-6 h-6 rounded-full bg-teal-400 border-2 border-white"></div>
-         </div><span class="text-xs text-gray-500">+۲۳۴ دانشجو</span>
-        </div><button class="text-teal-700 font-medium text-sm hover:text-teal-800 transition-colors">مشاهده ←</button>
-       </div>
-      </div>
-     </div><!-- Course Card 2 -->
-     <div class="feature-card glass-card rounded-3xl overflow-hidden">
-      <div class="h-40 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-       <svg class="w-16 h-16 text-white/80" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-       </svg>
-      </div>
-      <div class="p-6">
-       <div class="flex items-center gap-2 mb-3"><span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">نوروآناتومی</span> <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">۶۰ درس</span>
-       </div>
-       <h3 class="text-lg font-bold text-gray-900 mb-2">آناتومی سیستم عصبی</h3>
-       <p class="text-gray-600 text-sm mb-4">مغز، نخاع، اعصاب محیطی و مسیرهای عصبی</p>
-       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-         <div class="flex -space-x-2 space-x-reverse">
-          <div class="w-6 h-6 rounded-full bg-blue-200 border-2 border-white"></div>
-          <div class="w-6 h-6 rounded-full bg-blue-300 border-2 border-white"></div>
-          <div class="w-6 h-6 rounded-full bg-blue-400 border-2 border-white"></div>
-         </div><span class="text-xs text-gray-500">+۱۸۷ دانشجو</span>
-        </div><button class="text-blue-700 font-medium text-sm hover:text-blue-800 transition-colors">مشاهده ←</button>
-       </div>
-      </div>
-     </div><!-- Course Card 3 -->
-     <div class="feature-card glass-card rounded-3xl overflow-hidden">
-      <div class="h-40 bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center">
-       <svg class="w-16 h-16 text-white/80" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-       </svg>
-      </div>
-      <div class="p-6">
-       <div class="flex items-center gap-2 mb-3"><span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">بیوشیمی</span> <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">۵۵ درس</span>
-       </div>
-       <h3 class="text-lg font-bold text-gray-900 mb-2">متابولیسم و آنزیم‌ها</h3>
-       <p class="text-gray-600 text-sm mb-4">گلیکولیز، چرخه کربس، فسفریلاسیون اکسیداتیو</p>
-       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-         <div class="flex -space-x-2 space-x-reverse">
-          <div class="w-6 h-6 rounded-full bg-purple-200 border-2 border-white"></div>
-          <div class="w-6 h-6 rounded-full bg-purple-300 border-2 border-white"></div>
-          <div class="w-6 h-6 rounded-full bg-purple-400 border-2 border-white"></div>
-         </div><span class="text-xs text-gray-500">+۳۱۲ دانشجو</span>
-        </div><button class="text-purple-700 font-medium text-sm hover:text-purple-800 transition-colors">مشاهده ←</button>
-       </div>
-      </div>
-     </div>
-    </div>
-   </section><!-- Flashcard Demo Section -->
-   <section id="flashcards" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="glass-card rounded-3xl p-8 md:p-12">
-     <div class="grid md:grid-cols-2 gap-12 items-center">
-      <div>
-       <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">سیستم فلش‌کارت هوشمند</h2>
-       <p class="text-gray-600 mb-8 leading-relaxed">با استفاده از الگوریتم تکرار فاصله‌دار، مطالب را در بهترین زمان ممکن مرور کنید. سیستم ما بر اساس عملکرد شما، زمان مرور هر کارت را بهینه‌سازی می‌کند.</p>
-       <div class="space-y-4">
-        <div class="flex items-center gap-4">
-         <div class="w-10 h-10 icon-glass rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-         </div><span class="text-gray-700">یادآوری خودکار در تلگرام</span>
+  </header>
+
+  <main class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <div style="display:inline-block; padding: 6px 16px; border-radius: 100px; background: rgba(15,118,110,0.1); color: var(--primary); font-weight: 700; font-size: 0.85rem; margin-bottom: 20px;">پلتفرم نوین آموزش پزشکی</div>
+        <h1>یادگیری پزشکی،<br><span class="stroke-text">هوشمندتر</span> از همیشه</h1>
+        <p>الگوریتم‌های ما با الگوبرداری از منحنی فراموشی ابینگهاوس، مطالب حیاتی را قبل از محو شدن از ذهنتان بازآفرینی می‌کنند.</p>
+        <div class="hero-btns">
+          <button onclick="openLoginModal()" class="btn-cta" style="padding: 14px 35px; font-size: 1.1rem;">شروع رایگان</button>
+          <a href="#how" class="btn-secondary">مشاهده مکانیزم</a>
         </div>
-        <div class="flex items-center gap-4">
-         <div class="w-10 h-10 icon-glass rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-         </div><span class="text-gray-700">آمار دقیق یادگیری</span>
-        </div>
-        <div class="flex items-center gap-4">
-         <div class="w-10 h-10 icon-glass rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-         </div><span class="text-gray-700">امکان ساخت کارت اختصاصی</span>
-        </div>
-       </div>
-      </div><!-- Flashcard Demo -->
-      <div class="relative">
-       <div id="flashcard" onclick="flipCard()" class="relative w-full aspect-[4/3] cursor-pointer perspective-1000" style="perspective: 1000px;">
-        <div id="flashcard-inner" class="relative w-full h-full transition-transform duration-500" style="transform-style: preserve-3d;"><!-- Front -->
-         <div class="absolute inset-0 glass-card rounded-2xl p-8 flex flex-col items-center justify-center backface-hidden" style="backface-visibility: hidden;"><span class="text-sm text-teal-600 font-medium mb-4">فیزیولوژی قلب</span>
-          <p class="text-xl md:text-2xl font-bold text-gray-900 text-center">فاز دپولاریزاسیون سریع در پتانسیل عمل قلبی توسط کدام کانال یونی ایجاد می‌شود؟</p><span class="mt-6 text-gray-400 text-sm">برای دیدن پاسخ کلیک کنید</span>
-         </div><!-- Back -->
-         <div class="absolute inset-0 glass-card rounded-2xl p-8 flex flex-col items-center justify-center" style="backface-visibility: hidden; transform: rotateY(180deg);"><span class="text-sm text-teal-600 font-medium mb-4">پاسخ</span>
-          <p class="text-xl md:text-2xl font-bold text-gray-900 text-center mb-4">کانال‌های سدیمی سریع (Fast Na+ Channels)</p>
-          <p class="text-gray-600 text-center text-sm">این کانال‌ها با باز شدن سریع، ورود ناگهانی سدیم به سلول را ایجاد کرده و پتانسیل غشا را از -۹۰ به +۲۰ میلی‌ولت می‌رسانند.</p>
-          <div class="flex gap-3 mt-6"><button onclick="event.stopPropagation(); rateCard('again')" class="px-4 py-2 bg-red-100 text-red-700 rounded-xl text-sm font-medium hover:bg-red-200 transition-colors">دوباره</button> <button onclick="event.stopPropagation(); rateCard('hard')" class="px-4 py-2 bg-orange-100 text-orange-700 rounded-xl text-sm font-medium hover:bg-orange-200 transition-colors">سخت</button> <button onclick="event.stopPropagation(); rateCard('good')" class="px-4 py-2 bg-teal-100 text-teal-700 rounded-xl text-sm font-medium hover:bg-teal-200 transition-colors">خوب</button> <button onclick="event.stopPropagation(); rateCard('easy')" class="px-4 py-2 bg-green-100 text-green-700 rounded-xl text-sm font-medium hover:bg-green-200 transition-colors">آسان</button>
+      </div>
+      <div class="hero-visual">
+        <div class="floating-card glass-card">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; border-bottom: 1px dashed var(--bg-border); padding-bottom: 15px;">
+            <div style="width: 12px; height: 12px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 10px var(--primary-glow);"></div>
+            <div style="font-weight: 800; font-size: 0.9rem;">مرور فعال | اسلات ۲</div>
           </div>
-         </div>
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
-   </section><!-- Telegram Notification Section -->
-   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="glass-card rounded-3xl p-8 md:p-12 bg-gradient-to-br from-white/80 to-teal-50/50">
-     <div class="grid md:grid-cols-2 gap-12 items-center"><!-- Telegram Chat Preview -->
-      <div class="order-2 md:order-1">
-       <div class="glass-card rounded-2xl overflow-hidden max-w-sm mx-auto">
-        <div class="bg-gradient-to-r from-[#0088cc] to-[#00a0dc] p-4 flex items-center gap-3">
-         <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-          <svg class="w-6 h-6 text-white" viewbox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.154.234.17.331.015.098.034.321.019.496z" />
-          </svg>
-         </div>
-         <div>
-          <div class="text-white font-bold">
-           drkhaste Bot
+          <div style="margin-bottom: 20px;">
+            <span style="font-size: 0.7rem; font-weight: 800; background: rgba(15,118,110,0.1); color: var(--primary); padding: 4px 8px; border-radius: 6px;">اطفال | نلسون</span>
+            <h3 style="margin-top: 10px; font-size: 1rem; line-height: 1.6;">سن پاتوگنومونیک اینواژیناسیون روده در کودکان چه بازه‌ای است؟</h3>
           </div>
-          <div class="text-white/70 text-xs">
-           ربات یادآوری
+          <div style="display: flex; gap: 10px;">
+            <div style="flex: 1; height: 40px; border-radius: 10px; background: rgba(239,68,68,0.1); color: #ef4444; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">مردود</div>
+            <div style="flex: 1; height: 40px; border-radius: 10px; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">بلد بودم</div>
           </div>
-         </div>
         </div>
-        <div class="p-4 space-y-3 bg-[#e5ddd5]">
-         <div class="bg-white rounded-2xl rounded-tl-sm p-3 shadow-sm max-w-[85%]">
-          <p class="text-gray-800 text-sm">سلام علی! 👋</p>
-          <p class="text-gray-800 text-sm mt-1">وقت مرور فلش‌کارت‌هاته!</p><span class="text-xs text-gray-400 mt-1 block">۱۰:۳۰</span>
-         </div>
-         <div class="bg-white rounded-2xl rounded-tl-sm p-3 shadow-sm max-w-[85%]">
-          <p class="text-gray-800 text-sm">📚 <strong>۱۲ کارت</strong> از فیزیولوژی قلب</p>
-          <p class="text-gray-800 text-sm">📚 <strong>۸ کارت</strong> از بیوشیمی</p><span class="text-xs text-gray-400 mt-1 block">۱۰:۳۰</span>
-         </div>
-         <div class="bg-white rounded-2xl rounded-tl-sm p-3 shadow-sm">
-          <div class="flex gap-2"><button class="flex-1 bg-teal-500 text-white py-2 rounded-xl text-sm font-medium">شروع مرور</button> <button class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-sm font-medium">بعداً یادآوری کن</button>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats-grid" data-reveal>
+      <div class="stat-box glass-card">
+        <div class="stat-val" data-count="250">0</div>
+        <div class="stat-label">درسنامه تخصصی</div>
+      </div>
+      <div class="stat-box glass-card">
+        <div class="stat-val" data-count="15000">0</div>
+        <div class="stat-label">فلش‌کارت</div>
+      </div>
+      <div class="stat-box glass-card">
+        <div class="stat-val" data-count="8000">0</div>
+        <div class="stat-label">تست طبقه‌بندی</div>
+      </div>
+      <div class="stat-box glass-card">
+        <div class="stat-val" data-count="98">0</div>
+        <div class="stat-label">رضایت کاربران</div>
+      </div>
+    </div>
+
+    <!-- Magic Section -->
+    <section class="magic-section">
+      <div id="magicText" class="magic-text">
+        نخوابیدن و پرخوانی هنر نیست؛ مرور استراتژیک قدرت مطلق است. وقتی در نقطه‌ی بحرانِ بالین، دوز حیاتیِ یک داروی اورژانس را با تکنولوژی لایتنر از اعماق قشر کورتکس بازیابی می‌کنید، ما ماموریتمان را به پایان رسانده‌ایم.
+      </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="courses" style="padding: 100px 0;">
+      <div class="section-title">
+        <h2 class="gradient-text">درسنامه‌های محبوب</h2>
+        <p>جدیدترین و پرطرفدارترین درسنامه‌های پلتفرم</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+        <!-- Course Card 1 -->
+        <div class="glass-card" style="overflow: hidden;" data-reveal>
+          <div style="height: 160px; background: linear-gradient(135deg, #0f766e, #14b8a6); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">🫀</div>
+          <div style="padding: 24px;">
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+              <span style="font-size: 0.7rem; background: rgba(15,118,110,0.1); color: var(--primary); padding: 4px 8px; border-radius: 4px;">فیزیولوژی</span>
+              <span style="font-size: 0.7rem; background: rgba(0,0,0,0.05); color: var(--text-muted); padding: 4px 8px; border-radius: 4px;">۴۵ درس</span>
+            </div>
+            <h3 style="font-size: 1.2rem; margin-bottom: 10px;">فیزیولوژی قلب و عروق</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">شامل الکتروفیزیولوژی، سیکل قلبی، فشار خون و غیره.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.8rem; color: var(--text-muted);">+۲۳۴ دانشجو</span>
+              <a href="#" style="color: var(--primary); font-weight: 700; font-size: 0.9rem;">مشاهده ←</a>
+            </div>
           </div>
-         </div>
         </div>
-       </div>
-      </div>
-      <div class="order-1 md:order-2">
-       <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">هرگز یک مرور را از دست نده!</h2>
-       <p class="text-gray-600 mb-8 leading-relaxed">ربات تلگرام ما در بهترین زمان‌ها یادآوری می‌کند که فلش‌کارت‌هایت را مرور کنی. دیگر نیازی نیست خودت به یاد داشته باشی!</p>
-       <div class="space-y-4 mb-8">
-        <div class="flex items-center gap-4">
-         <div class="w-10 h-10 icon-glass rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-         </div><span class="text-gray-700">یادآوری در ساعت‌های دلخواه شما</span>
+        <!-- Course Card 2 -->
+        <div class="glass-card" style="overflow: hidden;" data-reveal>
+          <div style="height: 160px; background: linear-gradient(135deg, #3b82f6, #2563eb); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">🧠</div>
+          <div style="padding: 24px;">
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+              <span style="font-size: 0.7rem; background: rgba(59,130,246,0.1); color: #2563eb; padding: 4px 8px; border-radius: 4px;">نوروآناتومی</span>
+              <span style="font-size: 0.7rem; background: rgba(0,0,0,0.05); color: var(--text-muted); padding: 4px 8px; border-radius: 4px;">۶۰ درس</span>
+            </div>
+            <h3 style="font-size: 1.2rem; margin-bottom: 10px;">آناتومی سیستم عصبی</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">مغز، نخاع، اعصاب محیطی و مسیرهای عصبی.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.8rem; color: var(--text-muted);">+۱۸۷ دانشجو</span>
+              <a href="#" style="color: #2563eb; font-weight: 700; font-size: 0.9rem;">مشاهده ←</a>
+            </div>
+          </div>
         </div>
-        <div class="flex items-center gap-4">
-         <div class="w-10 h-10 icon-glass rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-         </div><span class="text-gray-700">گزارش روزانه پیشرفت</span>
+        <!-- Course Card 3 -->
+        <div class="glass-card" style="overflow: hidden;" data-reveal>
+          <div style="height: 160px; background: linear-gradient(135deg, #a855f7, #7e22ce); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">🧪</div>
+          <div style="padding: 24px;">
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+              <span style="font-size: 0.7rem; background: rgba(168,85,247,0.1); color: #7e22ce; padding: 4px 8px; border-radius: 4px;">بیوشیمی</span>
+              <span style="font-size: 0.7rem; background: rgba(0,0,0,0.05); color: var(--text-muted); padding: 4px 8px; border-radius: 4px;">۵۵ درس</span>
+            </div>
+            <h3 style="font-size: 1.2rem; margin-bottom: 10px;">متابولیسم و آنزیم‌ها</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">گلیکولیز، چرخه کربس و فسفریلاسیون اکسیداتیو.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.8rem; color: var(--text-muted);">+۳۱۲ دانشجو</span>
+              <a href="#" style="color: #7e22ce; font-weight: 700; font-size: 0.9rem;">مشاهده ←</a>
+            </div>
+          </div>
         </div>
-        <div class="flex items-center gap-4">
-         <div class="w-10 h-10 icon-glass rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-         </div><span class="text-gray-700">شروع سریع مرور از داخل تلگرام</span>
+      </div>
+    </section>
+
+    <!-- How it works (Timeline) -->
+    <section id="how" class="steps-section">
+      <div class="section-title">
+        <h2 class="gradient-text">فیزیولوژی یک تحول آموزشی</h2>
+        <p>درون سامانه چه اتفاقاتی می‌افتد؟ مسیر تسلط زیر ذره‌بین.</p>
+      </div>
+      <div class="timeline" id="timeline">
+        <div class="timeline-line"></div>
+        <div class="timeline-progress" id="progressLine"></div>
+
+        <div class="step">
+          <div class="step-dot"></div>
+          <div class="step-content glass-card">
+            <h3><span>۰۱.</span> درسنامه کپسولارینگ</h3>
+            <p>دیگر خبری از هزاران صفحه پی‌دی‌اف طاقت‌فرسا نیست. رفرنس‌ها به قطعات کوچک (کپسول) تقسیم شده‌اند تا فقط نکات تست‌زا و مهم را بخوانید.</p>
+          </div>
         </div>
-       </div><button onclick="openLoginModal()" class="telegram-btn text-white px-6 py-3 rounded-xl font-medium flex items-center gap-2">
-        <svg class="w-5 h-5" viewbox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.154.234.17.331.015.098.034.321.019.496z" />
-        </svg> اتصال به ربات تلگرام </button>
+        <div class="step">
+          <div class="step-dot"></div>
+          <div class="step-content glass-card">
+            <h3><span>۰۲.</span> برخورد بلافاصله</h3>
+            <p>در انتهای هر کپسول، تست‌های بالینی دقیق ظاهر می‌شوند تا خطای ذهن خود را بسنجید و یادگیری عمیق در سیناپس‌ها شکل بگیرد.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-dot"></div>
+          <div class="step-content glass-card">
+            <h3><span>۰۳.</span> استارتر جعبه لایتنر</h3>
+            <p>نکات فرار و اشتباهاتتان را به لایتنر پرتاب کنید. هوش مصنوعی وظیفه یادآوری آن‌ها در بازه‌های زمانی بهینه را بر عهده می‌گیرد.</p>
+          </div>
+        </div>
       </div>
-     </div>
-    </div>
-   </section><!-- CTA Section -->
-   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="glass-card rounded-3xl p-8 md:p-16 text-center bg-gradient-to-br from-teal-600 to-teal-800 relative overflow-hidden">
-     <div class="absolute inset-0 opacity-10">
-      <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-      <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
-     </div>
-     <div class="relative z-10">
-      <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">همین الان شروع کن!</h2>
-      <p class="text-teal-100 text-lg md:text-xl mb-10 max-w-2xl mx-auto">با ورود از طریق تلگرام، به تمام درسنامه‌ها و فلش‌کارت‌ها دسترسی پیدا کن</p><button onclick="openLoginModal()" class="bg-white text-teal-700 px-10 py-4 rounded-2xl font-bold text-lg hover:bg-teal-50 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center gap-3 mx-auto">
-       <svg class="w-6 h-6" viewbox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.154.234.17.331.015.098.034.321.019.496z" />
-       </svg> ورود با تلگرام - رایگان </button>
-     </div>
-    </div>
-   </section><!-- Footer -->
-   <footer class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="glass-card rounded-3xl p-8 md:p-12">
-     <div class="grid md:grid-cols-4 gap-8">
-      <div class="md:col-span-2">
-       <div class="flex items-center gap-3 mb-4">
-        <div class="w-10 h-10 rounded-xl icon-glass flex items-center justify-center">
-         <svg class="w-6 h-6 text-teal-700" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-         </svg>
-        </div><span id="footer-brand" class="text-xl font-bold text-teal-700">drkhaste</span>
-       </div>
-       <p class="text-gray-600 mb-6 max-w-md">پلتفرم هوشمند آموزش پزشکی با درسنامه‌های طبقه‌بندی شده، فلش‌کارت و سیستم مرور اختصاصی</p>
-       <div class="flex gap-4"><a href="#" class="w-10 h-10 icon-glass rounded-xl flex items-center justify-center hover:bg-teal-100 transition-colors">
-         <svg class="w-5 h-5 text-teal-700" viewbox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.154.234.17.331.015.098.034.321.019.496z" />
-         </svg></a> <a href="#" class="w-10 h-10 icon-glass rounded-xl flex items-center justify-center hover:bg-teal-100 transition-colors">
-         <svg class="w-5 h-5 text-teal-700" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-         </svg></a>
-       </div>
+    </section>
+
+    <!-- Bento Grid Features -->
+    <section id="features" class="bento-section">
+      <div class="section-title">
+        <h2>امکانات بی‌نظیر برای پزشکان</h2>
       </div>
-      <div>
-       <h4 class="font-bold text-gray-900 mb-4">دسترسی سریع</h4>
-       <ul class="space-y-3">
-        <li><a href="#features" class="text-gray-600 hover:text-teal-700 transition-colors">امکانات</a></li>
-        <li><a href="#courses" class="text-gray-600 hover:text-teal-700 transition-colors">درسنامه‌ها</a></li>
-        <li><a href="#flashcards" class="text-gray-600 hover:text-teal-700 transition-colors">فلش‌کارت</a></li>
-        <li><a href="#pricing" class="text-gray-600 hover:text-teal-700 transition-colors">تعرفه‌ها</a></li>
-       </ul>
+      <div class="bento-grid">
+        <div class="bento-box wide glass-card" data-reveal>
+          <div class="icon">📊</div>
+          <h3>آنالیز دقیق پیشرفت</h3>
+          <p>نمایش نقاط ضعف به صورت گراف؛ اینکه قلب را خوب می‌فهمید ولی غدد در کماست! ما دقیقا می‌گوییم کجا باید بیشتر تلاش کنید.</p>
+        </div>
+        <div class="bento-box glass-card" data-reveal>
+          <div class="icon">🌙</div>
+          <h3>حالت مطالعه شب</h3>
+          <p>رنگ‌بندی اختصاصی برای جلوگیری از خستگی چشم در شیفت‌های طولانی شب.</p>
+        </div>
+        <div class="bento-box glass-card" data-reveal>
+          <div class="icon">📱</div>
+          <h3>همگام‌سازی ابری</h3>
+          <p>از مرور در گوشی تا مطالعه در تبلت؛ همه‌چیز همیشه و همه‌جا در دسترس شماست.</p>
+        </div>
+        <div class="bento-box large glass-card" data-reveal>
+          <div class="icon">🎓</div>
+          <h3>ارکستر کامل رزیدنتی</h3>
+          <p>تمامی دروس از داخلی و اطفال تا بیولوژی و فارماکولوژی، بر اساس آخرین رفرنس‌های وزارت بهداشت (۱۴۰۳) طبقه‌بندی شده‌اند.</p>
+          <div style="margin-top: auto; padding-top: 40px; display: flex; gap: 10px;">
+            <div style="width: 100px; height: 130px; background: var(--bg-body); border-radius: 12px; transform: rotate(-5deg); border: 1px solid var(--bg-border);"></div>
+            <div style="width: 100px; height: 130px; background: var(--primary); border-radius: 12px; transform: scale(1.1); z-index: 1; border: 1px solid var(--bg-border); color: white; padding: 10px; font-size: 0.6rem; font-weight: 800;">مورد تایید<br>فردا مجدد</div>
+            <div style="width: 100px; height: 130px; background: var(--bg-body); border-radius: 12px; transform: rotate(5deg); border: 1px solid var(--bg-border);"></div>
+          </div>
+        </div>
+        <div class="bento-box wide glass-card" data-reveal>
+          <div class="icon">🤖</div>
+          <h3>اتصال به ربات تلگرام</h3>
+          <p>دیگر نیازی به یادداشت کردن زمان مرور نیست؛ ربات اختصاصی ما در ساعت‌های دلخواه شما، اعلان مرور را ارسال می‌کند.</p>
+        </div>
       </div>
-      <div>
-       <h4 class="font-bold text-gray-900 mb-4">پشتیبانی</h4>
-       <ul class="space-y-3">
-        <li><a href="#" class="text-gray-600 hover:text-teal-700 transition-colors">سوالات متداول</a></li>
-        <li><a href="#" class="text-gray-600 hover:text-teal-700 transition-colors">تماس با ما</a></li>
-        <li><a href="#" class="text-gray-600 hover:text-teal-700 transition-colors">قوانین و مقررات</a></li>
-        <li><a href="#" class="text-gray-600 hover:text-teal-700 transition-colors">حریم خصوصی</a></li>
-       </ul>
+    </section>
+
+    <!-- Interactive Flashcards -->
+    <section id="flashcards" class="flashcard-section">
+      <div class="flashcard-container">
+        <div>
+          <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 24px;">جعبه لایتنر هوشمند</h2>
+          <p style="color: var(--text-muted); margin-bottom: 32px; font-size: 1.1rem;">با استفاده از الگوریتم Spaced Repetition، حافظه کوتاه مدت خود را به حافظه بلند مدت دائمی تبدیل کنید.</p>
+          <ul style="list-style: none; space-y: 16px;">
+            <li style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;"><span style="color: var(--primary); font-size: 1.2rem;">✓</span> یادآوری خودکار در تلگرام</li>
+            <li style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;"><span style="color: var(--primary); font-size: 1.2rem;">✓</span> دسته‌بندی بر اساس رفرنس</li>
+            <li style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;"><span style="color: var(--primary); font-size: 1.2rem;">✓</span> گزارش دقیق میزان تسلط</li>
+          </ul>
+        </div>
+        <div class="card-3d" onclick="flipCard()">
+          <div id="cardInner" class="card-inner">
+            <div class="card-front glass-card">
+              <span style="color: var(--primary); font-weight: 800; font-size: 0.9rem; margin-bottom: 20px;">سوال فلش‌کارت</span>
+              <h3 style="font-size: 1.5rem; font-weight: 900;">فاز دپولاریزاسیون سریع در پتانسیل عمل قلبی توسط کدام کانال یونی ایجاد می‌شود؟</h3>
+              <p style="margin-top: 30px; color: var(--text-muted); font-size: 0.8rem;">برای دیدن پاسخ کلیک کنید</p>
+            </div>
+            <div class="card-back glass-card">
+              <span style="color: var(--primary); font-weight: 800; font-size: 0.9rem; margin-bottom: 20px;">پاسخ صحیح</span>
+              <h3 style="font-size: 1.5rem; font-weight: 900; color: var(--primary); margin-bottom: 15px;">کانال‌های سدیمی سریع (Fast Na+)</h3>
+              <p style="font-size: 0.95rem;">این کانال‌ها با باز شدن سریع، باعث ورود ناگهانی یون سدیم و تغییر پتانسیل از -۹۰ به +۲۰ میلی‌ولت می‌شوند.</p>
+              <div style="display: flex; gap: 8px; margin-top: 30px; width: 100%;">
+                <button onclick="event.stopPropagation(); showToast('در صف مرور مجدد قرار گرفت')" style="flex:1; padding: 10px; background: #fee2e2; color: #ef4444; border-radius: 12px; font-weight: 700; font-size: 0.7rem;">سخت</button>
+                <button onclick="event.stopPropagation(); showToast('برای ۳ روز بعد تنظیم شد')" style="flex:1; padding: 10px; background: #fef3c7; color: #d97706; border-radius: 12px; font-weight: 700; font-size: 0.7rem;">متوسط</button>
+                <button onclick="event.stopPropagation(); showToast('برای ۷ روز بعد تنظیم شد')" style="flex:1; padding: 10px; background: #ccfbf1; color: #0f766e; border-radius: 12px; font-weight: 700; font-size: 0.7rem;">آسان</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-     </div>
-     <div class="border-t border-gray-200 mt-8 pt-8 text-center">
-      <p class="text-gray-500 text-sm">© ۱۴۰۳ drkhaste - تمامی حقوق محفوظ است</p>
-     </div>
+    </section>
+
+    <!-- Telegram Bot Section -->
+    <section class="container" style="padding: 100px 0;">
+      <div class="glass-card" style="padding: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;">
+        <div class="hero-visual">
+          <div class="telegram-preview glass">
+            <div style="background: var(--telegram); color: white; padding: 10px 15px; border-radius: 15px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <div style="width: 30px; height: 30px; background: rgba(255,255,255,0.2); border-radius: 50%;"></div>
+              <span style="font-weight: 800; font-size: 0.8rem;">drkhaste Bot</span>
+            </div>
+            <div class="tg-msg">سلام علی! 👋 وقت مرور فلش‌کارت‌هاته.</div>
+            <div class="tg-msg">📚 ۱۲ کارت از فیزیولوژی قلب منتظرته.</div>
+            <div style="display: flex; gap: 5px;">
+              <button style="flex: 1; background: var(--telegram); color: white; border-radius: 10px; padding: 8px; font-size: 0.7rem; font-weight: 700;">شروع مرور</button>
+              <button style="flex: 1; background: white; color: var(--text-muted); border-radius: 10px; padding: 8px; font-size: 0.7rem;">بعدا یادآوری کن</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h2 style="font-size: 2rem; font-weight: 900; margin-bottom: 20px;">هرگز یک مرور را از دست نده</h2>
+          <p style="color: var(--text-muted); margin-bottom: 30px;">ربات تلگرام ما در بهترین زمان‌ها یادآوری می‌کند که فلش‌کارت‌هایت را مرور کنی. دیگر نیازی نیست خودت به یاد داشته باشی!</p>
+          <button onclick="openLoginModal()" class="btn-cta" style="background: var(--telegram); display: flex; align-items: center; gap: 10px;">
+            <span>اتصال به ربات تلگرام</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <div class="cta-wrap" data-reveal>
+        <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 20px;">همین الان سفر آموزشی خود را شروع کنید</h2>
+        <p style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 40px;">با ورود از طریق تلگرام، به تمام درسنامه‌ها و تست‌ها دسترسی پیدا کنید.</p>
+        <button onclick="openLoginModal()" class="glass" style="padding: 18px 50px; border-radius: 50px; font-size: 1.3rem; font-weight: 800; background: white; color: var(--primary);">اکانت خود را فعال کنید</button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-grid">
+        <div>
+          <div class="logo" style="margin-bottom: 20px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+            <span>drkhaste</span>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">پلتفرم هوشمند آموزش پزشکی مبتنی بر متدهای نوین روانشناسی یادگیری. با ما موفقیت در رزیدنتی دور از دسترس نیست.</p>
+        </div>
+        <div>
+          <h4 style="margin-bottom: 20px; font-weight: 800;">دسترسی سریع</h4>
+          <ul style="list-style: none; font-size: 0.9rem; color: var(--text-muted); space-y: 10px;">
+            <li><a href="#how">متدولوژی</a></li>
+            <li><a href="#features">امکانات</a></li>
+            <li><a href="#flashcards">لایتنر</a></li>
+            <li><a href="#courses">درسنامه‌ها</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="margin-bottom: 20px; font-weight: 800;">پشتیبانی</h4>
+          <ul style="list-style: none; font-size: 0.9rem; color: var(--text-muted); space-y: 10px;">
+            <li><a href="#">سوالات متداول</a></li>
+            <li><a href="#">تماس با ما</a></li>
+            <li><a href="#">قوانین و مقررات</a></li>
+          </ul>
+        </div>
+      </div>
+      <div style="text-align: center; font-size: 0.8rem; color: var(--text-muted); padding-top: 40px; border-top: 1px solid var(--bg-border);">
+        تمامی حقوق برای drkhaste محفوظ است | ۱۴۰۳
+      </div>
+    </footer>
+  </main>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal-overlay">
+    <div class="modal glass-card">
+      <button onclick="closeLoginModal()" style="position: absolute; top: 20px; left: 20px; font-size: 1.5rem;">✕</button>
+      <div style="text-align: center; margin-bottom: 30px;">
+        <div style="width: 70px; height: 70px; background: rgba(15,118,110,0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 2rem;">👤</div>
+        <h3 style="font-size: 1.8rem; font-weight: 900; margin-bottom: 8px;">ورود دانشجویان</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">شماره موبایل خود را وارد کنید</p>
+      </div>
+      <div class="input-group">
+        <label>شماره موبایل</label>
+        <input type="tel" id="phone" class="glass-input" placeholder="۰۹۱۲۳۴۵۶۷۸۹" dir="ltr" style="text-align: center; letter-spacing: 2px;">
+      </div>
+      <button onclick="sendCode()" id="loginBtn" class="btn-cta" style="width: 100%; padding: 16px; font-size: 1.1rem; background: var(--telegram);">ارسال کد از تلگرام</button>
+      <p style="text-align: center; font-size: 0.7rem; color: var(--text-muted); margin-top: 20px;">با ورود به سامانه، تمامی قوانین را می‌پذیرید.</p>
     </div>
-   </footer>
-  </main><!-- Login Modal -->
-  <div id="loginModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-   <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeLoginModal()"></div>
-   <div class="glass-card rounded-3xl p-8 max-w-md w-full relative z-10 animate-fadeInUp"><button onclick="closeLoginModal()" class="absolute top-4 left-4 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors">
-     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-     </svg></button>
-    <div class="text-center mb-8">
-     <div class="w-16 h-16 icon-glass rounded-2xl flex items-center justify-center mx-auto mb-4">
-      <svg class="w-8 h-8 text-teal-700" viewbox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.154.234.17.331.015.098.034.321.019.496z" />
-      </svg>
-     </div>
-     <h3 class="text-2xl font-bold text-gray-900 mb-2">ورود به drkhaste</h3>
-     <p class="text-gray-600">با تلگرام وارد شوید و شروع کنید</p>
-    </div>
-    <div class="space-y-4">
-     <div><label for="phone" class="block text-sm font-medium text-gray-700 mb-2">شماره موبایل</label> <input type="tel" id="phone" placeholder="۰۹۱۲۳۴۵۶۷۸۹" dir="ltr" class="glass-input w-full px-4 py-3 rounded-xl outline-none text-center text-lg tracking-wider">
-     </div><button onclick="sendCode()" id="sendCodeBtn" class="telegram-btn w-full text-white py-4 rounded-xl font-semibold flex items-center justify-center gap-2">
-      <svg class="w-5 h-5" viewbox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.154.234.17.331.015.098.034.321.019.496z" />
-      </svg> ارسال کد تأیید </button>
-     <p class="text-center text-xs text-gray-500 mt-4">با ورود، <a href="#" class="text-teal-600 hover:underline">قوانین و مقررات</a> را می‌پذیرید</p>
-    </div>
-   </div>
-  </div><!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden">
-   <div class="glass-card px-6 py-3 rounded-xl flex items-center gap-3 shadow-lg">
-    <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-    </svg><span id="toastMessage" class="text-gray-700 font-medium"></span>
-   </div>
   </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast glass" style="background: white;">
+    <span id="toastMsg">پیام تست</span>
+  </div>
+
   <script>
-    // Default configuration
+    /*
+      =========================================
+      Global State & Init
+      =========================================
+    */
     const defaultConfig = {
       brand_name: 'drkhaste',
       hero_title: 'یادگیری پزشکی، هوشمندتر از همیشه',
-      hero_subtitle: 'درسنامه‌های طبقه‌بندی شده، فلش‌کارت‌های هوشمند و سیستم مرور اختصاصی همراه با اعلان‌های یادآوری در تلگرام',
-      primary_color: '#0F766E',
-      background_color: '#ffffff',
-      text_color: '#1f2937',
-      secondary_surface_color: 'rgba(255, 255, 255, 0.7)',
-      secondary_action_color: '#0088cc'
+      primary_color: '#0f766e'
     };
 
-    let isFlipped = false;
-
-    // Flashcard flip function
-    function flipCard() {
-      const inner = document.getElementById('flashcard-inner');
-      isFlipped = !isFlipped;
-      inner.style.transform = isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+    // Dark Mode Toggle
+    function toggleDarkMode() {
+      const isDark = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
     }
 
-    // Rate card function
-    function rateCard(rating) {
-      showToast(`کارت با امتیاز "${rating === 'again' ? 'دوباره' : rating === 'hard' ? 'سخت' : rating === 'good' ? 'خوب' : 'آسان'}" ثبت شد`);
-      setTimeout(() => {
-        flipCard();
-      }, 500);
+    if(localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.getElementById('themeBtn').textContent = '☀️';
     }
 
-    // Modal functions
+    /*
+      =========================================
+      UI Interactions
+      =========================================
+    */
+    // Menu Toggle
+    function toggleMenu() {
+      document.getElementById('nav').classList.toggle('active');
+    }
+
+    // Modal
     function openLoginModal() {
-      document.getElementById('loginModal').classList.remove('hidden');
-      document.getElementById('loginModal').classList.add('flex');
+      document.getElementById('loginModal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
-
     function closeLoginModal() {
-      document.getElementById('loginModal').classList.add('hidden');
-      document.getElementById('loginModal').classList.remove('flex');
-      document.body.style.overflow = 'auto';
+      document.getElementById('loginModal').classList.remove('active');
+      document.body.style.overflow = '';
     }
 
-    // Send code function (demo)
-    function sendCode() {
-      const phone = document.getElementById('phone').value;
-      if (!phone || phone.length < 10) {
-        showToast('لطفاً شماره موبایل معتبر وارد کنید');
-        return;
-      }
-      
-      const btn = document.getElementById('sendCodeBtn');
-      btn.innerHTML = '<svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> در حال ارسال...';
-      btn.disabled = true;
-      
-      setTimeout(() => {
-        showToast('کد تأیید به تلگرام شما ارسال شد (نمونه)');
-        btn.innerHTML = '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.154.234.17.331.015.098.034.321.019.496z"/></svg> ارسال کد تأیید';
-        btn.disabled = false;
-      }, 2000);
+    // Flashcard Flip
+    function flipCard() {
+      document.getElementById('cardInner').classList.toggle('flipped');
     }
 
-    // Toast notification
-    function showToast(message) {
+    // Toast
+    function showToast(msg) {
       const toast = document.getElementById('toast');
-      const toastMessage = document.getElementById('toastMessage');
-      toastMessage.textContent = message;
-      toast.classList.remove('hidden');
-      
+      document.getElementById('toastMsg').textContent = msg;
+      toast.classList.add('active');
+      setTimeout(() => toast.classList.remove('active'), 3000);
+    }
+
+    // Login Action (Demo)
+    function sendCode() {
+      const btn = document.getElementById('loginBtn');
+      const originalText = btn.textContent;
+      btn.textContent = 'در حال ارسال...';
+      btn.disabled = true;
       setTimeout(() => {
-        toast.classList.add('hidden');
-      }, 3000);
+        showToast('کد تایید به تلگرام شما ارسال شد');
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }, 1500);
     }
 
-    // Element SDK Integration
-    async function onConfigChange(config) {
-      // Update brand names
-      const brandElements = ['nav-brand', 'footer-brand'];
-      brandElements.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = config.brand_name || defaultConfig.brand_name;
+    /*
+      =========================================
+      Scroll Effects (Vanilla JS)
+      =========================================
+    */
+    // Header Scroll Effect
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('header');
+      if(window.scrollY > 50) header.classList.add('scrolled');
+      else header.classList.remove('scrolled');
+      
+      updateTimeline();
+    });
+
+    // Magic Text Reveal
+    const magicText = document.getElementById('magicText');
+    const words = magicText.innerText.split(' ');
+    magicText.innerHTML = words.map(w => {
+      const isGlow = ['لایتنر', 'استراتژیک', 'قدرت', 'مطلق'].some(target => w.includes(target));
+      return `<span class="magic-word ${isGlow ? 'glow' : ''}">${w}</span>`;
+    }).join(' ');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          const words = entry.target.querySelectorAll('.magic-word');
+          words.forEach((word, i) => {
+            setTimeout(() => word.classList.add('active'), i * 50);
+          });
+        }
       });
+    }, { threshold: 0.5 });
+    observer.observe(magicText);
 
-      // Update hero section
-      const heroTitle = document.getElementById('hero-title');
-      if (heroTitle) {
-        const title = config.hero_title || defaultConfig.hero_title;
-        heroTitle.innerHTML = title.replace('هوشمندتر', '<span class="stat-number">هوشمندتر</span>');
+    // Reveal on Scroll
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) entry.target.classList.add('revealed');
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+
+    // Bento Mouse Track
+    document.querySelectorAll('.bento-box').forEach(box => {
+      box.addEventListener('mousemove', e => {
+        const rect = box.getBoundingClientRect();
+        box.style.setProperty('--x', `${e.clientX - rect.left}px`);
+        box.style.setProperty('--y', `${e.clientY - rect.top}px`);
+      });
+    });
+
+    // Timeline Progress
+    function updateTimeline() {
+      const timeline = document.getElementById('timeline');
+      const progressLine = document.getElementById('progressLine');
+      const steps = document.querySelectorAll('.step');
+
+      const rect = timeline.getBoundingClientRect();
+      const viewHeight = window.innerHeight;
+
+      if(rect.top < viewHeight / 2) {
+        const totalHeight = rect.height;
+        const scrolled = (viewHeight / 2) - rect.top;
+        const progress = Math.min(100, Math.max(0, (scrolled / totalHeight) * 100));
+        progressLine.style.height = `${progress}%`;
+
+        steps.forEach(step => {
+          const stepRect = step.getBoundingClientRect();
+          if(stepRect.top < viewHeight / 2) step.classList.add('active');
+          else step.classList.remove('active');
+        });
       }
+    }
 
-      const heroSubtitle = document.getElementById('hero-subtitle');
-      if (heroSubtitle) {
-        heroSubtitle.innerHTML = (config.hero_subtitle || defaultConfig.hero_subtitle).replace(/\n/g, '<br class="hidden md:block">');
+    // Number Counter
+    function startCounter(el) {
+      const target = parseInt(el.dataset.count);
+      let count = 0;
+      const duration = 2000;
+      const stepTime = duration / 50;
+      const increment = target / 50;
+
+      const timer = setInterval(() => {
+        count += increment;
+        if(count >= target) {
+          el.textContent = target.toLocaleString();
+          clearInterval(timer);
+        } else {
+          el.textContent = Math.floor(count).toLocaleString();
+        }
+      }, stepTime);
+    }
+
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-val').forEach(startCounter);
+          statObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    statObserver.observe(document.querySelector('.stats-grid'));
+
+    /*
+      =========================================
+      SDK Integration
+      =========================================
+    */
+    async function onConfigChange(config) {
+      // Update primary color if changed in SDK
+      if(config.primary_color) {
+        document.documentElement.style.setProperty('--primary', config.primary_color);
       }
     }
 
-    function mapToCapabilities(config) {
-      return {
-        recolorables: [
-          {
-            get: () => config.background_color || defaultConfig.background_color,
-            set: (value) => {
-              config.background_color = value;
-              if (window.elementSdk) window.elementSdk.setConfig({ background_color: value });
-            }
-          },
-          {
-            get: () => config.secondary_surface_color || defaultConfig.secondary_surface_color,
-            set: (value) => {
-              config.secondary_surface_color = value;
-              if (window.elementSdk) window.elementSdk.setConfig({ secondary_surface_color: value });
-            }
-          },
-          {
-            get: () => config.text_color || defaultConfig.text_color,
-            set: (value) => {
-              config.text_color = value;
-              if (window.elementSdk) window.elementSdk.setConfig({ text_color: value });
-            }
-          },
-          {
-            get: () => config.primary_color || defaultConfig.primary_color,
-            set: (value) => {
-              config.primary_color = value;
-              if (window.elementSdk) window.elementSdk.setConfig({ primary_color: value });
-            }
-          },
-          {
-            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
-            set: (value) => {
-              config.secondary_action_color = value;
-              if (window.elementSdk) window.elementSdk.setConfig({ secondary_action_color: value });
-            }
-          }
-        ],
-        borderables: [],
-        fontEditable: undefined,
-        fontSizeable: undefined
-      };
-    }
-
-    function mapToEditPanelValues(config) {
-      return new Map([
-        ['brand_name', config.brand_name || defaultConfig.brand_name],
-        ['hero_title', config.hero_title || defaultConfig.hero_title],
-        ['hero_subtitle', config.hero_subtitle || defaultConfig.hero_subtitle]
-      ]);
-    }
-
-    // Initialize Element SDK
     if (window.elementSdk) {
       window.elementSdk.init({
         defaultConfig,
         onConfigChange,
-        mapToCapabilities,
-        mapToEditPanelValues
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            { get: () => config.primary_color || defaultConfig.primary_color, set: (v) => { config.primary_color = v; onConfigChange(config); } }
+          ],
+          borderables: [],
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['brand_name', config.brand_name || defaultConfig.brand_name]
+        ])
       });
-    } else {
-      onConfigChange(defaultConfig);
     }
-
-    // Close modal on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeLoginModal();
-      }
-    });
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cd4499d1156d243',t:'MTc3MDk4NTMwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </body>
 </html>
